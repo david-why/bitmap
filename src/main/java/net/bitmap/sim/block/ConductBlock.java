@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
 // import net.minecraft.block.RedstoneLampBlock;  // Used for programming
@@ -22,8 +21,7 @@ import net.minecraft.world.World;
 public class ConductBlock extends Block {
 
     private static final IntProperty COLOR;
-    private static final BooleanProperty REDSTONE;
-    private static final BooleanProperty ON;
+    private static final IntProperty ON;
     private static Integer speed = 2;
 
     public ConductBlock(Settings settings) {
@@ -32,12 +30,15 @@ public class ConductBlock extends Block {
     }
     public ConductBlock() {
         super(FabricBlockSettings.copy(Blocks.STONE));
+        AttackBlockCallback.EVENT.register(this::attackCallback);
     }
     
     public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.GOLDEN_SWORD) {
-            world.setBlockState(pos, (BlockState)state.cycle(REDSTONE), 3);
+            Integer onNow = (Integer)state.get(ON);
+            if (onNow == 0 || onNow == 2) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
+            else world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
         } else if (itemInHand == Items.IRON_SWORD) {
             world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
         } else if (itemInHand == Items.STONE_SWORD) {
@@ -52,7 +53,6 @@ public class ConductBlock extends Block {
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(COLOR);
-        builder.add(REDSTONE);
         builder.add(ON);
     }
 
@@ -60,24 +60,27 @@ public class ConductBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
         if (itemInHand == Items.GOLDEN_SWORD) {
-            Boolean redstoneCompat = (Boolean)state.get(REDSTONE);
-            if (redstoneCompat) {
-                world.setBlockState(pos, (BlockState)state.cycle(ON));
-            } else return ActionResult.PASS;
+            Integer onNow = (Integer)state.get(ON);
+            if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
+            else {
+                if (onNow == 2) world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
+                else return ActionResult.PASS;
+            }
         } else if (itemInHand == Items.STONE_SWORD) {
             if (speed == 5) speed = 2;
             else {
                 if (speed > 1) speed /= 2;
                 else return ActionResult.PASS;
             }
+        } else if (itemInHand == Items.IRON_SWORD) {
+            world.setBlockState(pos, (BlockState)state.cycle(COLOR).cycle(COLOR).cycle(COLOR).cycle(COLOR), 3);
         }
         return ActionResult.SUCCESS;
     }
 
     static {
         COLOR = IntProperty.of("color", 0, 4);
-        REDSTONE = BooleanProperty.of("redstone_compat");
-        ON = BooleanProperty.of("is_on");
+        ON = IntProperty.of("on", 0, 2);
     }
 
 }

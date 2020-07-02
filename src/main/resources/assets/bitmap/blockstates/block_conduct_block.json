@@ -1,27 +1,40 @@
 {
     "variants": {
-        "redstone_compat=false,color=0": {
+        "on=0,color=0": {
             "model": "bitmap:cond_orange_false"
         },
-        "redstone_compat=false,color=1": {
+        "on=0,color=1": {
             "model": "bitmap:cond_yellow_false"
         },
-        "redstone_compat=false,color=2": {
+        "on=0,color=2": {
             "model": "bitmap:cond_white_false"
         },
-        "redstone_compat=false,color=3": {
+        "on=0,color=3": {
             "model": "bitmap:cond_blue_false"
         },
-        "redstone_compat=true,color=0": {
-            "model": "bitmap:cond_orange_true"
+        "on=1,color=0": {
+            "model": "bitmap:cond_orange_1"
         },
-        "redstone_compat=true,color=1": {
-            "model": "bitmap:cond_yellow_true"
+        "on=1,color=1": {
+            "model": "bitmap:cond_yellow_1"
         },
-        "redstone_compat=true,color=2": {
-            "model": "bitmap:cond_white_true"
+        "on=1,color=2": {
+            "model": "bitmap:cond_white_1"
         },
-        "redstone_compat=true,color=3": {
-            "model": "bitmap:cond_blue_true"
+        "on=1,color=3": {
+            "model": "bitmap:cond_blue_1"
+        },
+        "on=2,color=0": {
+            "model": "bitmap:cond_orange_2"
+        },
+        "on=2,color=1": {
+            "model": "bitmap:cond_yellow_2"
+        },
+        "on=2,color=2": {
+            "model": "bitmap:cond_white_2"
+        },
+        "on=2,color=3": {
+            "model": "bitmap:cond_blue_2"
         }
+    }
 }
