@@ -1,5 +1,6 @@
 package net.bitmap.sim.block;
 
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +21,7 @@ public class ConductBlock extends Block {
 
     private static final IntProperty COLOR;
     private static final BooleanProperty REDSTONE;
+    private static final Integer speed = 2;
 
     public ConductBlock(Settings settings) {
         super(settings);
@@ -31,9 +33,9 @@ public class ConductBlock extends Block {
     public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.REDSTONE) {
-            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
-        } else if (itemInHand == Items.STONE_SWORD) {
             world.setBlockState(pos, (BlockState)state.cycle(REDSTONE), 3);
+        } else if (itemInHand == Items.STONE_SWORD) {
+            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
         }
         return true;
     }

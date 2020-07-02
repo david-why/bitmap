@@ -1,13 +1,13 @@
 {
     "variants": {
         "redstone_compat=false,color=0": {
-            "model": "bitmap:cond_red_false"
+            "model": "bitmap:cond_orange_false"
         },
         "redstone_compat=false,color=1": {
             "model": "bitmap:cond_yellow_false"
         },
         "redstone_compat=false,color=2": {
-            "model": "bitmap:cond_orange_false"
+            "model": "bitmap:cond_white_false"
         },
         "redstone_compat=false,color=3": {
             "model": "bitmap:cond_blue_false"
@@ -16,13 +16,13 @@
             "model": "bitmap:cond_green_false"
         },
         "redstone_compat=true,color=0": {
-            "model": "bitmap:cond_red_true"
+            "model": "bitmap:cond_orange_true"
         },
         "redstone_compat=true,color=1": {
             "model": "bitmap:cond_yellow_true"
         },
         "redstone_compat=true,color=2": {
-            "model": "bitmap:cond_orange_true"
+            "model": "bitmap:cond_white_true"
         },
         "redstone_compat=true,color=3": {
             "model": "bitmap:cond_blue_true"
