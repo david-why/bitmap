@@ -1,7 +1,9 @@
 # bitmap
+======
 A Minecraft mod that adds a single block. It can be used as the "wire" in BitMap logic simulator.
-# Requirements
+## Requirements
+------------
 A few:
-	Minecraft 1.14.4
-	Fabric
+* Minecraft 1.14.4
+* Fabric
 That's it!
