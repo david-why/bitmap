@@ -12,9 +12,6 @@
         "redstone_compat=false,color=3": {
             "model": "bitmap:cond_blue_false"
         },
-        "redstone_compat=false,color=4": {
-            "model": "bitmap:cond_green_false"
-        },
         "redstone_compat=true,color=0": {
             "model": "bitmap:cond_orange_true"
         },
@@ -26,9 +23,5 @@
         },
         "redstone_compat=true,color=3": {
             "model": "bitmap:cond_blue_true"
-        },
-        "redstone_compat=true,color=4": {
-            "model": "bitmap:cond_green_true"
         }
-    }
 }
