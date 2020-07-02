@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "modbase",
+  "version": "${version}",
+
+  "name": "Mod base",
+  "description": "A base for my Fabric mods.",
+  "authors": [
+    "David"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": "https://github.com/david-why/mod-base"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/modbase/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mod.base.ModBase"
+    ]
+  },
+  "mixins": [],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.14.4"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
