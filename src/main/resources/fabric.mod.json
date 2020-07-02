@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
-  "id": "modbase",
+  "id": "bitmap",
   "version": "${version}",
 
-  "name": "Mod base",
-  "description": "A base for my Fabric mods.",
+  "name": "BitMap simulator",
+  "description": "A mod that simulates BitMap..",
   "authors": [
-    "David"
+    "David",
+	"Bob"
   ],
   "contact": {
     "homepage": "",
