@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 // import net.minecraft.block.RedstoneLampBlock;  // Used for programming
 import net.minecraft.util.Hand;
@@ -44,7 +45,10 @@ public class ConductBlock extends Block {
         } else if (itemInHand == Items.STONE_SWORD) {
             if (speed == 2) speed = 5;
             else {
-                if (speed < 655360) speed *= 2;
+                if (speed < 655360) {
+                    speed *= 2;
+                    player.sendMessage(new TranslatableText("message.speed.up"));
+                }
                 else return false;
             }
         } else return false;
@@ -69,7 +73,10 @@ public class ConductBlock extends Block {
         } else if (itemInHand == Items.STONE_SWORD) {
             if (speed == 5) speed = 2;
             else {
-                if (speed > 1) speed /= 2;
+                if (speed > 1) {
+                    speed /= 2;
+                    player.sendMessage(new TranslatableText("message.speed.down"));
+                }
                 else return ActionResult.PASS;
             }
         } else if (itemInHand == Items.IRON_SWORD) {
@@ -79,7 +86,7 @@ public class ConductBlock extends Block {
     }
 
     static {
-        COLOR = IntProperty.of("color", 0, 4);
+        COLOR = IntProperty.of("color", 0, 3);
         ON = IntProperty.of("on", 0, 2);
     }
 
