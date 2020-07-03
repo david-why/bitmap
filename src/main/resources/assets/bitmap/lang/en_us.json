@@ -1,5 +1,23 @@
 {
     "block.bitmap.block_conduct_block": "Semiconductor block",
-    "message.speed.down": "Speed changed slower.",
-    "message.speed.up": "Speed changed faster."
+    "message.speed.1": "Speed changed to 1x",
+    "message.speed.2": "Speed changed to 2x",
+    "message.speed.5": "Speed changed to 5x",
+    "message.speed.10": "Speed changed to 10x",
+    "message.speed.20": "Speed changed to 20x",
+    "message.speed.40": "Speed changed to 20*2^1x",
+    "message.speed.80": "Speed changed to 20*2^2x",
+    "message.speed.160": "Speed changed to 20*2^3x",
+    "message.speed.320": "Speed changed to 20*2^4x",
+    "message.speed.640": "Speed changed to 20*2^5x",
+    "message.speed.1280": "Speed changed to 20*2^6x",
+    "message.speed.2560": "Speed changed to 20*2^7x",
+    "message.speed.5120": "Speed changed to 20*2^8x",
+    "message.speed.10240": "Speed changed to 20*2^9x",
+    "message.speed.20480": "Speed changed to 20*2^10x",
+    "message.speed.40960": "Speed changed to 20*2^11x",
+    "message.speed.81920": "Speed changed to 20*2^12x",
+    "message.speed.163840": "Speed changed to 20*2^13x",
+    "message.speed.327680": "Speed changed to 20*2^14x",
+    "message.speed.655360": "Speed changed to 20*2^15x"
 }

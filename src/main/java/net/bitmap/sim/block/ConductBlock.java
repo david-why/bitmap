@@ -24,6 +24,7 @@ public class ConductBlock extends Block {
     private static final IntProperty COLOR;
     private static final IntProperty ON;
     private static Integer speed = 2;
+    private static long lastAttack = 0;
 
     public ConductBlock(Settings settings) {
         super(settings);
@@ -33,7 +34,7 @@ public class ConductBlock extends Block {
         super(FabricBlockSettings.copy(Blocks.STONE));
         AttackBlockCallback.EVENT.register(this::attackCallback);
     }
-    
+
     public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.GOLDEN_SWORD) {
@@ -47,10 +48,10 @@ public class ConductBlock extends Block {
             else {
                 if (speed < 655360) {
                     speed *= 2;
-                    player.sendMessage(new TranslatableText("message.speed.up"));
                 }
                 else return false;
             }
+            player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
         } else return false;
         return true;
     }
@@ -63,6 +64,7 @@ public class ConductBlock extends Block {
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
+        if (!(state.getBlock() instanceof ConductBlock) || System.currentTimeMillis() - 500 < lastAttack) return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
             Integer onNow = (Integer)state.get(ON);
             if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
@@ -75,13 +77,12 @@ public class ConductBlock extends Block {
             else {
                 if (speed > 1) {
                     speed /= 2;
-                    player.sendMessage(new TranslatableText("message.speed.down"));
                 }
                 else return ActionResult.PASS;
             }
-        } else if (itemInHand == Items.IRON_SWORD) {
-            world.setBlockState(pos, (BlockState)state.cycle(COLOR).cycle(COLOR).cycle(COLOR).cycle(COLOR), 3);
-        }
+            player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
+        } else return ActionResult.PASS;
+        lastAttack = System.currentTimeMillis();
         return ActionResult.SUCCESS;
     }
 

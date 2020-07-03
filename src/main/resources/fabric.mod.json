@@ -4,18 +4,18 @@
   "version": "${version}",
 
   "name": "BitMap simulator",
-  "description": "A mod that simulates BitMap..",
+  "description": "A mod that simulates BitMap.",
   "authors": [
     "David",
 	"Bob"
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/david-why/mod-base"
+    "sources": "https://github.com/david-why/bitmap"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modbase/icon.png",
+  "icon": "assets/bitmap/textures/cond_yellow_1.png",
 
   "environment": "*",
   "entrypoints": {
