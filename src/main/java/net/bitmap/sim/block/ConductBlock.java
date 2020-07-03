@@ -2,10 +2,8 @@ package net.bitmap.sim.block;
 
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -32,24 +30,24 @@ public class ConductBlock extends Block {
         super(settings);
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
-    }
-    public ConductBlock() {
-        super(FabricBlockSettings.copy(Blocks.STONE));
-        AttackBlockCallback.EVENT.register(this::attackCallback);
+        System.out.println("init ...");
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
-        if (!world.isClient || System.currentTimeMillis() - 300 < lastAttack) return ActionResult.PASS;
-        System.out.println("Activated...");
+        if (world.isClient || System.currentTimeMillis() - 300 < lastUse) return ActionResult.PASS;
+        System.out.println("Activated use...");
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
+        if (!(state.getBlock() instanceof ConductBlock)) return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
             Integer onNow = (Integer)state.get(ON);
+            System.out.println(onNow);
             if (onNow == 0 || onNow == 2) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
-            else world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
+            if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
+            System.out.println((Integer)state.get(ON));
         } else if (itemInHand == Items.IRON_SWORD) {
-            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
+            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 2);
         } else if (itemInHand == Items.STONE_SWORD) {
             if (speed == 2) speed = 5;
             else {
@@ -60,6 +58,7 @@ public class ConductBlock extends Block {
             }
             player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
         } else return ActionResult.PASS;
+        lastUse = System.currentTimeMillis();
         return ActionResult.SUCCESS;
     }
 
@@ -69,10 +68,11 @@ public class ConductBlock extends Block {
     }
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
-        if (!world.isClient) return ActionResult.PASS;
+        if (world.isClient || System.currentTimeMillis() - 300 < lastAttack) return ActionResult.PASS;
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof ConductBlock) || System.currentTimeMillis() - 300 < lastAttack) return ActionResult.PASS;
+        if (!(state.getBlock() instanceof ConductBlock)) return ActionResult.PASS;
+        System.out.println("Activated attack...");
         if (itemInHand == Items.GOLDEN_SWORD) {
             Integer onNow = (Integer)state.get(ON);
             if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
@@ -89,6 +89,10 @@ public class ConductBlock extends Block {
                 else return ActionResult.PASS;
             }
             player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
+        } else if (itemInHand == Items.IRON_SWORD) {
+            System.out.println((Integer)state.get(COLOR));
+            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
+            System.out.println((Integer)state.get(COLOR));
         } else return ActionResult.PASS;
         lastAttack = System.currentTimeMillis();
         return ActionResult.SUCCESS;
@@ -97,7 +101,17 @@ public class ConductBlock extends Block {
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         return (Integer)state.get(ON) == 2 ? 15 : 0;
     }
-    
+
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
+        if (!world.isClient) {
+            if (world.isReceivingRedstonePower(pos)) {
+                if ((Integer)state.get(ON) == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
+            } else {
+                if ((Integer)state.get(ON) == 2) world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
+            }
+        }
+    }
+
     public boolean emitsRedstonePower(BlockState state) {
         System.out.println((Integer)state.get(ON));
         return (Integer)state.get(ON) == 2;
