@@ -99,12 +99,12 @@ public class ConductBlock extends Block {
     }
 
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
-        return (Integer)state.get(ON) == 2 ? 15 : 0;
+        return (Integer)state.get(ON) == 2 ? 12 : 0;
     }
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
         if (!world.isClient) {
-            if (world.isReceivingRedstonePower(pos)) {
+            if (world.getReceivedRedstonePower(pos) > 13) {
                 if ((Integer)state.get(ON) == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
             } else {
                 if ((Integer)state.get(ON) == 2) world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
