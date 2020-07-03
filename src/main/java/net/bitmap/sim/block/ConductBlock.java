@@ -30,22 +30,18 @@ public class ConductBlock extends Block {
         super(settings);
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
-        System.out.println("init ...");
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
         if (world.isClient || System.currentTimeMillis() - 300 < lastUse) return ActionResult.PASS;
-        System.out.println("Activated use...");
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof ConductBlock)) return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
             Integer onNow = (Integer)state.get(ON);
-            System.out.println(onNow);
             if (onNow == 0 || onNow == 2) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
-            if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
-            System.out.println((Integer)state.get(ON));
+            else world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
         } else if (itemInHand == Items.IRON_SWORD) {
             world.setBlockState(pos, (BlockState)state.cycle(COLOR), 2);
         } else if (itemInHand == Items.STONE_SWORD) {
@@ -56,7 +52,7 @@ public class ConductBlock extends Block {
                 }
                 else return ActionResult.PASS;
             }
-            player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
+            player.sendMessage(new TranslatableText("message.speed", speed));
         } else return ActionResult.PASS;
         lastUse = System.currentTimeMillis();
         return ActionResult.SUCCESS;
@@ -72,7 +68,6 @@ public class ConductBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof ConductBlock)) return ActionResult.PASS;
-        System.out.println("Activated attack...");
         if (itemInHand == Items.GOLDEN_SWORD) {
             Integer onNow = (Integer)state.get(ON);
             if (onNow == 1) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
@@ -88,11 +83,9 @@ public class ConductBlock extends Block {
                 }
                 else return ActionResult.PASS;
             }
-            player.sendMessage(new TranslatableText("message.speed." + speed.toString()));
+            player.sendMessage(new TranslatableText("message.speed", speed));
         } else if (itemInHand == Items.IRON_SWORD) {
-            System.out.println((Integer)state.get(COLOR));
             world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
-            System.out.println((Integer)state.get(COLOR));
         } else return ActionResult.PASS;
         lastAttack = System.currentTimeMillis();
         return ActionResult.SUCCESS;
