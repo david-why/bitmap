@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 
 public class ConductBlock extends Block {
 
-    private static final IntProperty COLOR;
     private static final IntProperty ON;
     private static Integer speed = 2;
     private static long lastAttack = 0, lastUse = 0;
@@ -30,6 +29,12 @@ public class ConductBlock extends Block {
         super(settings);
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
+    }
+    public ConductBlock(Settings settings, IntProperty color) {
+        super(settings);
+        AttackBlockCallback.EVENT.register(this::attackCallback);
+        UseBlockCallback.EVENT.register(this::useCallback);
+
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
@@ -42,8 +47,6 @@ public class ConductBlock extends Block {
             Integer onNow = (Integer)state.get(ON);
             if (onNow == 0 || onNow == 2) world.setBlockState(pos, (BlockState)state.cycle(ON), 3);
             else world.setBlockState(pos, (BlockState)state.cycle(ON).cycle(ON), 3);
-        } else if (itemInHand == Items.IRON_SWORD) {
-            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 2);
         } else if (itemInHand == Items.STONE_SWORD) {
             if (speed == 2) speed = 5;
             else {
@@ -59,7 +62,6 @@ public class ConductBlock extends Block {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(COLOR);
         builder.add(ON);
     }
 
@@ -84,8 +86,6 @@ public class ConductBlock extends Block {
                 else return ActionResult.PASS;
             }
             player.sendMessage(new TranslatableText("message.speed", speed));
-        } else if (itemInHand == Items.IRON_SWORD) {
-            world.setBlockState(pos, (BlockState)state.cycle(COLOR), 3);
         } else return ActionResult.PASS;
         lastAttack = System.currentTimeMillis();
         return ActionResult.SUCCESS;
@@ -111,7 +111,6 @@ public class ConductBlock extends Block {
     }
 
     static {
-        COLOR = IntProperty.of("color", 0, 3);
         ON = IntProperty.of("on", 0, 2);
     }
 
