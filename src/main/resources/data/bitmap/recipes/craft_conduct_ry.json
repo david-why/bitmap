@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#"
+    ],
+    "key": {
+        "#": {
+            "item": "bitmap:item_conduct_blockr"
+        }
+    },
+    "result": {
+        "item": "bitmap:item_conduct_blocky",
+        "count": 1
+    }
+}

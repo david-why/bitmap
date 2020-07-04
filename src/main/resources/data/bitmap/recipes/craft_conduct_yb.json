@@ -1,20 +1,15 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "###",
-        "#R#",
-        "###"
+        "#"
     ],
     "key": {
         "#": {
-            "item": "minecraft:stone"
-        },
-        "R": {
-            "item": "minecraft:redstone"
+            "item": "bitmap:item_conduct_blocky"
         }
     },
     "result": {
         "item": "bitmap:item_conduct_blockb",
-        "count": 8
+        "count": 1
     }
 }

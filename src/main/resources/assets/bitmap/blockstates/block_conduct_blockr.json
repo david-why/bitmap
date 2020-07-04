@@ -6,7 +6,7 @@
         "on=1": {
             "model": "bitmap:cond_red_1"
         },
-        "on=": {
+        "on=2": {
             "model": "bitmap:cond_red_2"
         }
     }

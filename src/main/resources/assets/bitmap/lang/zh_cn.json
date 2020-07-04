@@ -1,24 +1,4 @@
 {
     "block.bitmap.block_conduct_block": "半导体",
-    "message.speed": "半导体速度已调整为%dHz。",
-    "message.speed.1": "速度已调整为1倍速",
-    "message.speed.2": "速度已调整为2倍速",
-    "message.speed.5": "速度已调整为5倍速",
-    "message.speed.10": "速度已调整为10倍速",
-    "message.speed.20": "速度已调整为20倍速",
-    "message.speed.40": "速度已调整为20*2^1倍速",
-    "message.speed.80": "速度已调整为20*2^2倍速",
-    "message.speed.160": "速度已调整为20*2^3倍速",
-    "message.speed.320": "速度已调整为20*2^4倍速",
-    "message.speed.640": "速度已调整为20*2^5倍速",
-    "message.speed.1280": "速度已调整为20*2^6倍速",
-    "message.speed.2560": "速度已调整为20*2^7倍速",
-    "message.speed.5120": "速度已调整为20*2^8倍速",
-    "message.speed.10240": "速度已调整为20*2^9倍速",
-    "message.speed.20480": "速度已调整为20*2^10倍速",
-    "message.speed.40960": "速度已调整为20*2^11倍速",
-    "message.speed.81920": "速度已调整为20*2^12倍速",
-    "message.speed.163840": "速度已调整为20*2^13倍速",
-    "message.speed.327680": "速度已调整为20*2^14倍速",
-    "message.speed.655360": "速度已调整为20*2^15倍速"
+    "message.speed": "半导体速度已调整为%dHz。"
 }
