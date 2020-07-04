@@ -1,5 +1,6 @@
 {
     "block.bitmap.block_conduct_block": "Semiconductor block",
+    "message.speed": "Semiconductor speed changed to %d Hz.",
     "message.speed.1": "Speed changed to 1x",
     "message.speed.2": "Speed changed to 2x",
     "message.speed.5": "Speed changed to 5x",
