@@ -96,6 +96,20 @@ public class SemiConductorBlock extends Block {
         return (Integer) state.get(ON) == 2;
     }
 
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onBlockAdded(state, world, pos, oldState, moved);
+        if (world.isClient || oldState.getBlock() instanceof SemiConductorBlock) return;
+        SemiConductor.releaseMachine(pos);
+    }
+
+    @Override
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onBlockRemoved(state, world, pos, newState, moved);
+        if (world.isClient || newState.getBlock() instanceof SemiConductorBlock) return;
+        SemiConductor.releaseMachine(pos);
+    }
+
     static {
         ON = IntProperty.of("on", 0, 2);
     }

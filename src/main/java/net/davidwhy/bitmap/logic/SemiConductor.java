@@ -36,6 +36,7 @@ public class SemiConductor {
     // 释放机器（包括相邻18个方块对应的机器），返回释放的方块数，如果返回0表示释放失败
     // 放置或消除方块时，应该先释放对应的机器
     public static int releaseMachine(BlockPos pos) {
+        System.out.println("Released machine");
         return 0;
     }
 
