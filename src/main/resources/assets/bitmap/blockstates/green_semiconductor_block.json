@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "on=0": {
+            "model": "bitmap:cond_green_0"
+        },
+        "on=1": {
+            "model": "bitmap:cond_green_1"
+        },
+        "on=2": {
+            "model": "bitmap:cond_green_2"
+        }
+    }
+}

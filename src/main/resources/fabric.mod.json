@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "id": "bitmap",
-  "version": "${version}",
+  "version": "1.0.0",
 
   "name": "BitMap simulator",
   "description": "A mod that simulates BitMap.",
   "authors": [
     "David",
-	"Bob"
+	  "Bob"
   ],
   "contact": {
     "homepage": "",
@@ -15,12 +15,12 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/bitmap/textures/cond_yellow_1.png",
+  "icon": "assets/bitmap/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.bitmap.sim.BitMapMod"
+      "net.davidwhy.bitmap.BitMapMod"
     ]
   },
   "mixins": [],

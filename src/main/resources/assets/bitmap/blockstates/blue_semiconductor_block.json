@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "on=0": {
+            "model": "bitmap:cond_blue_0"
+        },
+        "on=1": {
+            "model": "bitmap:cond_blue_1"
+        },
+        "on=2": {
+            "model": "bitmap:cond_blue_2"
+        }
+    }
+}

@@ -1,4 +1,7 @@
 {
-    "block.bitmap.block_conduct_block": "Semiconductor block",
+    "block.bitmap.yellow_semiconductor_block": "Yellow semiconductor block",
+    "block.bitmap.red_semiconductor_block": "Red semiconductor block",
+    "block.bitmap.green_semiconductor_block": "Green semiconductor block",
+    "block.bitmap.blue_semiconductor_block": "Blue semiconductor block",
     "message.speed": "Semiconductor speed changed to %d Hz."
 }

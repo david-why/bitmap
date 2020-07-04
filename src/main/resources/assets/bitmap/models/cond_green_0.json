@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "bitmap:cond_blue_false"
+		"all": "bitmap:cond_green_0"
 	}
 }
