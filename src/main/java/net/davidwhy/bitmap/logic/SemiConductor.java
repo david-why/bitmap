@@ -1,5 +1,6 @@
 package net.davidwhy.bitmap.logic;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.util.math.BlockPos;
@@ -11,23 +12,21 @@ public class SemiConductor {
     public static int speedUp() {
         if (speed == 2)
             speed = 5;
-        else if (speed < 655360) {
+        else if (speed < 655360)
             speed *= 2;
-        }
         return speed;
     }
 
     public static int speedDown() {
         if (speed == 5)
             speed = 2;
-        else if (speed > 1) {
+        else if (speed > 1)
             speed /= 2;
-        }
         return speed;
     }
 
     private static Map<BlockPos, SemiConductorMachine> nodes;
-    private static Map<SemiConductorMachine, Set<BlockPos>> machines;
+    private static List<SemiConductorMachine> machines;
 
     // 生成机器，参数是所有方块集合和互操作型方块集合
     // 生成机器时，会先释放每个方块对应的所有旧机器
@@ -48,12 +47,12 @@ public class SemiConductor {
     }
 
     // 将方块改成互操作型，返回当前电平
-    public static Boolean setBlockCoop(BlockPos pos) {
+    public static Boolean setCoopBlock(BlockPos pos) {
         return false;
     }
 
     // 将方块改成非互操作型
-    public static void unsetBlockCoop(BlockPos pos) {
+    public static void unsetCoopBlock(BlockPos pos) {
 
     }
 
