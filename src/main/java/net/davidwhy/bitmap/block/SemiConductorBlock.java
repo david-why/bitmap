@@ -67,7 +67,6 @@ public class SemiConductorBlock extends Block {
                 return ActionResult.PASS;
             world.setBlockState(pos, (BlockState) state.with(ON, onNow == 1 ? 2 : 1), 3);
             return ActionResult.SUCCESS;
-
         } else if (itemInHand == Items.STONE_SWORD) {
             player.sendMessage(new TranslatableText("message.speed", SemiConductor.speedDown()));
             return ActionResult.SUCCESS;
@@ -81,19 +80,19 @@ public class SemiConductorBlock extends Block {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
             boolean moved) {
-        if (!world.isClient) {
-            if (world.getReceivedRedstonePower(pos) > 8) {
-                if ((Integer) state.get(ON) == 1)
-                    world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
-            } else {
-                if ((Integer) state.get(ON) == 2)
-                    world.setBlockState(pos, (BlockState) state.with(ON, 1), 3);
-            }
+        if (world.isClient)
+            return;
+
+        if (world.getReceivedRedstonePower(pos) > 8) {
+            if ((Integer) state.get(ON) == 1)
+                world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
+        } else {
+            if ((Integer) state.get(ON) == 2)
+                world.setBlockState(pos, (BlockState) state.with(ON, 1), 3);
         }
     }
 
     public boolean emitsRedstonePower(BlockState state) {
-        System.out.println((Integer) state.get(ON));
         return (Integer) state.get(ON) == 2;
     }
 
