@@ -15,7 +15,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/bitmap/icon.png",
+  "icon": "assets/bitmap/bmps_logo_48.png",
 
   "environment": "*",
   "entrypoints": {
