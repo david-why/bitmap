@@ -40,8 +40,15 @@ public class SemiconductorBlock extends Block {
         if (world.isClient)
             return ActionResult.SUCCESS;
         if (itemInHand == Items.GOLDEN_SWORD) {
-            world.setBlockState(pos, (BlockState) state.with(ON, (Integer) state.get(ON) == 0 ? 1 : 0), 3);
-            checkMachine(pos);
+            int on = (Integer) state.get(ON);
+            checkMachine(world, pos);
+            if (on == 0) {
+                on = Semiconductor.setCoopBlock(pos) ? 2 : 1;
+            } else {
+                Semiconductor.unsetCoopBlock(pos);
+                on = 0;
+            }
+            world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
             player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedUp()));
@@ -63,20 +70,17 @@ public class SemiconductorBlock extends Block {
         if (!(state.getBlock() instanceof SemiconductorBlock))
             return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
-            checkMachine(pos);
+            checkMachine(world, pos);
+            if ((Integer) state.get(ON) == 0)
+                return ActionResult.PASS;
             Semiconductor.powerBlock(pos, 30);
-            if ((Integer) state.get(ON) == 1)
-                world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
+            world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
             player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedDown()));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
-    }
-
-    private void checkMachine(BlockPos pos) {
-        ;
     }
 
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
@@ -115,6 +119,10 @@ public class SemiconductorBlock extends Block {
         if (world.isClient || newState.getBlock() instanceof SemiconductorBlock)
             return;
         Semiconductor.releaseMachine(pos);
+    }
+
+    private void checkMachine(World world, BlockPos pos) {
+        ;
     }
 
     static {

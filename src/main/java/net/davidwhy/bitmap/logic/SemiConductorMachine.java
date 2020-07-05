@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorMachine {
@@ -13,7 +12,7 @@ public class SemiconductorMachine {
     private List<Long> pendingTicks;
     private List<SemiconductorWire> pendingWires;
 
-    public int create(Set<BlockPos> nodes, Set<BlockPos> coopNodes) {
+    public int create(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
         return 0;
     }
 
@@ -37,7 +36,7 @@ public class SemiconductorMachine {
 
     }
 
-    public void tick() {
+    public void tick(long absTick) {
 
     }
 
