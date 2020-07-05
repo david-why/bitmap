@@ -19,13 +19,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.davidwhy.bitmap.logic.SemiConductor;
+import net.davidwhy.bitmap.logic.Semiconductor;
 
-public class SemiConductorBlock extends Block {
+public class SemiconductorBlock extends Block {
 
     private static final IntProperty ON;
 
-    public SemiConductorBlock() {
+    public SemiconductorBlock() {
         super(FabricBlockSettings.copy(Blocks.STONE));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
@@ -35,15 +35,16 @@ public class SemiConductorBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SemiConductorBlock) || player.isSpectator())
+        if (!(state.getBlock() instanceof SemiconductorBlock) || player.isSpectator())
             return ActionResult.PASS;
         if (world.isClient)
             return ActionResult.SUCCESS;
         if (itemInHand == Items.GOLDEN_SWORD) {
             world.setBlockState(pos, (BlockState) state.with(ON, (Integer) state.get(ON) == 0 ? 1 : 0), 3);
+            checkMachine(pos);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
-            player.sendMessage(new TranslatableText("message.speed", SemiConductor.speedUp()));
+            player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedUp()));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
@@ -59,19 +60,23 @@ public class SemiConductorBlock extends Block {
             return ActionResult.PASS;
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SemiConductorBlock))
+        if (!(state.getBlock() instanceof SemiconductorBlock))
             return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
-            Integer onNow = (Integer) state.get(ON);
-            if (onNow == 0)
-                return ActionResult.PASS;
-            world.setBlockState(pos, (BlockState) state.with(ON, onNow == 1 ? 2 : 1), 3);
+            checkMachine(pos);
+            Semiconductor.powerBlock(pos, 30);
+            if ((Integer) state.get(ON) == 1)
+                world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
-            player.sendMessage(new TranslatableText("message.speed", SemiConductor.speedDown()));
+            player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedDown()));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
+    }
+
+    private void checkMachine(BlockPos pos) {
+        ;
     }
 
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
@@ -99,15 +104,17 @@ public class SemiConductorBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (world.isClient || oldState.getBlock() instanceof SemiConductorBlock) return;
-        SemiConductor.releaseMachine(pos);
+        if (world.isClient || oldState.getBlock() instanceof SemiconductorBlock)
+            return;
+        Semiconductor.releaseMachine(pos);
     }
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onBlockRemoved(state, world, pos, newState, moved);
-        if (world.isClient || newState.getBlock() instanceof SemiConductorBlock) return;
-        SemiConductor.releaseMachine(pos);
+        if (world.isClient || newState.getBlock() instanceof SemiconductorBlock)
+            return;
+        Semiconductor.releaseMachine(pos);
     }
 
     static {

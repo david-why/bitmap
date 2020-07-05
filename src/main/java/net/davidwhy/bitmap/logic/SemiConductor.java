@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
-public class SemiConductor {
+public class Semiconductor {
 
     private static int speed = 2;
 

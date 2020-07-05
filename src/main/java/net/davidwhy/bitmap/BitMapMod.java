@@ -1,6 +1,6 @@
 package net.davidwhy.bitmap;
 
-import net.davidwhy.bitmap.block.SemiConductorBlock;
+import net.davidwhy.bitmap.block.SemiconductorBlock;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -12,10 +12,10 @@ import net.minecraft.util.registry.Registry;
 public class BitMapMod implements ModInitializer {
 
 	public static final String MODID = "bitmap";
-    public static final Block YELLOW_SEMICONDUCTOR_BLOCK = new SemiConductorBlock();
-    public static final Block RED_SEMICONDUCTOR_BLOCK = new SemiConductorBlock();
-    public static final Block GREEN_SEMICONDUCTOR_BLOCK = new SemiConductorBlock();
-    public static final Block BLUE_SEMICONDUCTOR_BLOCK = new SemiConductorBlock();
+    public static final Block YELLOW_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
+    public static final Block RED_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
+    public static final Block GREEN_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
+    public static final Block BLUE_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
 
     @Override
     public void onInitialize() {

@@ -8,10 +8,10 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiConductorMachine {
-    private Map<BlockPos, SemiConductorWire> nodes;
-    private List<SemiConductorWire> lines;
+    private Map<BlockPos, SemiconductorWire> nodes;
+    private List<SemiconductorWire> lines;
     private List<Long> pendingTicks;
-    private List<SemiConductorWire> pendingWires;
+    private List<SemiconductorWire> pendingWires;
 
     public int create(Set<BlockPos> nodes, Set<BlockPos> coopNodes) {
         return 0;
