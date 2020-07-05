@@ -7,10 +7,10 @@ import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorMachine {
-    private Map<BlockPos, SemiconductorWire> nodes;
-    private List<SemiconductorWire> lines;
-    private List<Long> pendingTicks;
-    private List<SemiconductorWire> pendingWires;
+    public Map<BlockPos, SemiconductorWire> nodes;
+    public List<SemiconductorWire> lines;
+    public List<Long> pendingTicks;
+    public List<SemiconductorWire> pendingWires;
 
     public int create(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
         return 0;
