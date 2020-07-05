@@ -35,7 +35,7 @@ public class SemiConductorBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SemiConductorBlock))
+        if (!(state.getBlock() instanceof SemiConductorBlock) || player.isSpectator())
             return ActionResult.PASS;
         if (world.isClient)
             return ActionResult.SUCCESS;
@@ -55,7 +55,7 @@ public class SemiConductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient)
+        if (world.isClient || player.isSpectator())
             return ActionResult.PASS;
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
