@@ -7,7 +7,7 @@ import java.util.Set;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 
-public class SemiConductorMachine {
+public class SemiconductorMachine {
     private Map<BlockPos, SemiconductorWire> nodes;
     private List<SemiconductorWire> lines;
     private List<Long> pendingTicks;

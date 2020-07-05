@@ -25,8 +25,8 @@ public class Semiconductor {
         return speed;
     }
 
-    private static Map<BlockPos, SemiConductorMachine> nodes;
-    private static List<SemiConductorMachine> machines;
+    private static Map<BlockPos, SemiconductorMachine> nodes;
+    private static List<SemiconductorMachine> machines;
 
     // 生成机器，参数是所有方块集合和互操作型方块集合
     // 生成机器时，会先释放每个方块对应的所有旧机器
