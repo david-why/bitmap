@@ -4,6 +4,7 @@ import net.davidwhy.bitmap.block.SemiconductorBlock;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
@@ -21,12 +22,10 @@ public class BitMapMod implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "yellow_semiconductor_block"),
                 YELLOW_SEMICONDUCTOR_BLOCK);
-        Registry.register(Registry.BLOCK, new Identifier(MODID, "red_semiconductor_block"), 
-                RED_SEMICONDUCTOR_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "red_semiconductor_block"), RED_SEMICONDUCTOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "green_semiconductor_block"),
                 GREEN_SEMICONDUCTOR_BLOCK);
-        Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_semiconductor_block"),
-                BLUE_SEMICONDUCTOR_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_semiconductor_block"), BLUE_SEMICONDUCTOR_BLOCK);
         Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_semiconductor_block"),
                 new BlockItem(YELLOW_SEMICONDUCTOR_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
         Registry.register(Registry.ITEM, new Identifier(MODID, "red_semiconductor_block"),
@@ -34,7 +33,9 @@ public class BitMapMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "green_semiconductor_block"),
                 new BlockItem(GREEN_SEMICONDUCTOR_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
         Registry.register(Registry.ITEM, new Identifier(MODID, "blue_semiconductor_block"),
-                new BlockItem(BLUE_SEMICONDUCTOR_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
+                new BlockItem(BLUE_SEMICONDUCTOR_BLOCK,
+                        new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64).food(new FoodComponent.Builder()
+                                .alwaysEdible().hunger(20).saturationModifier(10f).snack().build())));
     }
 
 }
