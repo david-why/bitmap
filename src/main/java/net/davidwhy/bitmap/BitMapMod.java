@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry;
 
 public class BitMapMod implements ModInitializer {
 
-	public static final String MODID = "bitmap";
+    public static final String MODID = "bitmap";
     public static final Block YELLOW_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
     public static final Block RED_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
     public static final Block GREEN_SEMICONDUCTOR_BLOCK = new SemiconductorBlock();
