@@ -2,7 +2,6 @@ package net.davidwhy.bitmap.logic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,12 +33,13 @@ public class SemiconductorMachine {
         return allNodes.size();
     }
 
-    public Set<BlockPos> release() {
-        Set<BlockPos> allNodes = new HashSet<BlockPos>();
-        nodes.forEach((pos, wire) -> {
-            allNodes.add(pos);
+    public void release(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
+        wires.forEach((SemiconductorWire wire) -> {
+            if (allNodes != null) 
+                wire.addAllNodes(allNodes);
+            if (coopNodes != null) 
+                wire.addCoopNodes(coopNodes);
         });
-        return allNodes;
     }
 
     public Boolean setCoop(BlockPos pos) {

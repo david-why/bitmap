@@ -35,16 +35,19 @@ public class SemiconductorBlock extends Block {
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
-        if (world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator())
+        if (world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator()) {
             return ActionResult.PASS;
+        }
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        if (!(block instanceof SemiconductorBlock) || player.isSpectator())
+        if (!(block instanceof SemiconductorBlock) || player.isSpectator()) {
             return ActionResult.PASS;
-        if (world.isClient)
+        }
+        if (world.isClient) {
             return ActionResult.SUCCESS;
+        }
         if (itemInHand == Items.GOLDEN_SWORD) {
             int on = (Integer) state.get(ON);
             checkMachine(player, world, pos);
@@ -69,16 +72,19 @@ public class SemiconductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator())
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator()) {
             return ActionResult.PASS;
+        }
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SemiconductorBlock))
+        if (!(state.getBlock() instanceof SemiconductorBlock)) {
             return ActionResult.PASS;
+        }
         if (itemInHand == Items.GOLDEN_SWORD) {
             checkMachine(player, world, pos);
-            if ((Integer) state.get(ON) == 0)
+            if ((Integer) state.get(ON) == 0) {
                 return ActionResult.PASS;
+            }
             Semiconductor.powerBlock(pos);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
@@ -94,9 +100,9 @@ public class SemiconductorBlock extends Block {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
             boolean moved) {
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD) {
             return;
-
+        }
         int powerLevel = world.getReceivedRedstonePower(pos);
         Semiconductor.powerBlock(pos, neighborPos, powerLevel);
     }
@@ -108,33 +114,49 @@ public class SemiconductorBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || oldState.getBlock() instanceof SemiconductorBlock)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD
+                || oldState.getBlock() instanceof SemiconductorBlock) {
             return;
-        releaseMachine(pos);
+        }
+        releaseMachine(world, pos);
     }
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onBlockRemoved(state, world, pos, newState, moved);
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || newState.getBlock() instanceof SemiconductorBlock)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD
+                || newState.getBlock() instanceof SemiconductorBlock) {
             return;
-        releaseMachine(pos);
+        }
+        releaseMachine(world, pos);
     }
 
-    private void releaseMachine(BlockPos pos) {
-        for (int x = -1; x <= 1; x++)
-            for (int y = -1; y <= 1; y++)
+    private void releaseMachine(World world, BlockPos pos) {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    if (x == 0 && y == 0 && z == 0)
+                    if (x == 0 && y == 0 && z == 0) {
                         continue;
+                    }
                     BlockPos npos = pos.add(x, y, z);
-                    Semiconductor.releaseMachine(npos);
+                    Set<BlockPos> coopNodes = Semiconductor.releaseMachine(npos);
+                    if (coopNodes != null) {
+                        coopNodes.forEach((BlockPos tpos) -> {
+                            BlockState state = world.getBlockState(tpos);
+                            if (state.getBlock() instanceof SemiconductorBlock) {
+                                world.setBlockState(tpos, (BlockState) state.with(ON, 1), 3);
+                            }
+                        });
+                    }
                 }
+            }
+        }
     }
 
     private void checkMachine(PlayerEntity player, World world, BlockPos pos) {
-        if (Semiconductor.inMachine(pos))
+        if (Semiconductor.inMachine(pos)) {
             return;
+        }
         Set<BlockPos> allNodes = new HashSet<BlockPos>();
         Set<BlockPos> coopNodes = new HashSet<BlockPos>();
         Set<BlockPos> badNodes = new HashSet<BlockPos>();
@@ -147,10 +169,11 @@ public class SemiconductorBlock extends Block {
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
                     if (!allNodes.contains(tpos)) {
                         allNodes.add(tpos);
-                        if (tstate.get(ON) > 0)
+                        if (tstate.get(ON) > 0) {
                             coopNodes.add(tpos);
-                        for (int x = -1; x <= 1; x++)
-                            for (int y = -1; y <= 1; y++)
+                        }
+                        for (int x = -1; x <= 1; x++) {
+                            for (int y = -1; y <= 1; y++) {
                                 for (int z = -1; z <= 1; z++) {
                                     if (x == 0 && y == 0 && z == 0)
                                         continue;
@@ -158,6 +181,8 @@ public class SemiconductorBlock extends Block {
                                     if (!allNodes.contains(npos) && !badNodes.contains(npos))
                                         tmpNodes2.add(npos);
                                 }
+                            }
+                        }
                     }
                 } else {
                     badNodes.add(tpos);

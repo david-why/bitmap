@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
@@ -20,9 +21,7 @@ public class Semiconductor {
     }
 
     public static int speedDown() {
-        if (speed == 5)
-            speed = 2;
-        else if (speed > 1)
+        if (speed > 1)
             speed /= 2;
         return speed;
     }
@@ -42,16 +41,18 @@ public class Semiconductor {
         return machine.create(allNodes, coopNodes);
     }
 
-    public static int releaseMachine(BlockPos pos) {
+    public static Set<BlockPos> releaseMachine(BlockPos pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null)
-            return 0;
+            return null;
         machines.remove(machine);
-        Set<BlockPos> allNodes = machine.release();
+        Set<BlockPos> allNodes = new HashSet<BlockPos>();
+        Set<BlockPos> coopNodes = new HashSet<BlockPos>();
+        machine.release(allNodes, coopNodes);
         allNodes.forEach((BlockPos tpos) -> {
             nodes.remove(tpos);
         });
-        return allNodes.size();
+        return coopNodes;
     }
 
     public static Boolean inMachine(BlockPos pos) {
