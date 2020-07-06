@@ -26,7 +26,6 @@ import net.davidwhy.bitmap.logic.Semiconductor;
 public class SemiconductorBlock extends Block {
 
     public static final IntProperty ON;
-    public static World world = null;
 
     public SemiconductorBlock(int luminance) {
         super(FabricBlockSettings.copyOf(Blocks.STONE).lightLevel(luminance));
@@ -41,9 +40,6 @@ public class SemiconductorBlock extends Block {
         Block block = state.getBlock();
         if (!(block instanceof SemiconductorBlock) || player.isSpectator())
             return ActionResult.PASS;
-        if (SemiconductorBlock.world != null && SemiconductorBlock.world != world)
-            return ActionResult.PASS;
-        SemiconductorBlock.world = world;
         if (world.isClient)
             return ActionResult.SUCCESS;
         if (itemInHand == Items.GOLDEN_SWORD) {
@@ -57,7 +53,7 @@ public class SemiconductorBlock extends Block {
             }
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
-        } else if (itemInHand == Items.STONE_SWORD) {
+        } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()));
             return ActionResult.SUCCESS;
         }
@@ -76,16 +72,13 @@ public class SemiconductorBlock extends Block {
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof SemiconductorBlock))
             return ActionResult.PASS;
-        if (SemiconductorBlock.world != null && SemiconductorBlock.world != world)
-            return ActionResult.PASS;
-        SemiconductorBlock.world = world;
         if (itemInHand == Items.GOLDEN_SWORD) {
             checkMachine(player, world, pos);
             if ((Integer) state.get(ON) == 0)
                 return ActionResult.PASS;
             Semiconductor.powerBlock(pos);
             return ActionResult.SUCCESS;
-        } else if (itemInHand == Items.STONE_SWORD) {
+        } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()));
             return ActionResult.SUCCESS;
         }
@@ -114,7 +107,8 @@ public class SemiconductorBlock extends Block {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (world.isClient || oldState.getBlock() instanceof SemiconductorBlock)
             return;
-        Semiconductor.releaseMachine(pos);
+        System.out.println(123);
+        releaseMachine(world, pos);
     }
 
     @Override
@@ -122,7 +116,18 @@ public class SemiconductorBlock extends Block {
         super.onBlockRemoved(state, world, pos, newState, moved);
         if (world.isClient || newState.getBlock() instanceof SemiconductorBlock)
             return;
-        Semiconductor.releaseMachine(pos);
+        releaseMachine(world, pos);
+    }
+
+    private void releaseMachine(World world, BlockPos pos) {
+        for (int x = -1; x <= 1; x++)
+            for (int y = -1; y <= 1; y++)
+                for (int z = -1; z <= 1; z++) {
+                    if (x == 0 && y == 0 && z == 0)
+                        continue;
+                    BlockPos npos = pos.add(x, y, z);
+                    Semiconductor.releaseMachine(npos);
+                }
     }
 
     private void checkMachine(PlayerEntity player, World world, BlockPos pos) {

@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.dimension.DimensionType;
 
 public class BitMapTick implements ServerTickEvents.StartWorldTick {
     public BitMapTick() {
@@ -15,7 +16,7 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
     }
 
     public void onStartTick(ServerWorld world) {
-        if (SemiconductorBlock.world != world)
+        if (world.dimension.getType() != DimensionType.OVERWORLD)
             return;
         Set<BlockPos> lowNodes = new HashSet<BlockPos>();
         Set<BlockPos> highNodes = new HashSet<BlockPos>();

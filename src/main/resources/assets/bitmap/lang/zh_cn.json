@@ -1,8 +1,12 @@
 {
-    "block.bitmap.yellow_semiconductor_block": "黄色半导体",
+    "block.bitmap.black_semiconductor_block": "黑色半导体",
     "block.bitmap.red_semiconductor_block": "红色半导体",
+    "block.bitmap.yellow_semiconductor_block": "黄色半导体",
     "block.bitmap.green_semiconductor_block": "绿色半导体",
+    "block.bitmap.cyan_semiconductor_block": "青色半导体",
     "block.bitmap.blue_semiconductor_block": "蓝色半导体",
+    "block.bitmap.pink_semiconductor_block": "紫色半导体",
+    "block.bitmap.white_semiconductor_block": "白色半导体",
     "message.bitmap.speed": "半导体速度已调整为%dHz。",
     "message.bitmap.create": "用%d个半导体方块制作了一台机器。"
 }
