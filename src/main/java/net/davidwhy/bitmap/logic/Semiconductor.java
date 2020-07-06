@@ -12,16 +12,16 @@ public class Semiconductor {
     private static int speed = 2;
 
     public static int speedUp() {
-        if (speed == 8)
-            speed = 15;
-        else if (speed < 900000)
+        if (speed == 2)
+            speed = 5;
+        else if (speed < 1000000)
             speed *= 2;
         return speed;
     }
 
     public static int speedDown() {
-        if (speed == 15)
-            speed = 8;
+        if (speed == 5)
+            speed = 2;
         else if (speed > 1)
             speed /= 2;
         return speed;
@@ -87,7 +87,7 @@ public class Semiconductor {
     }
 
     private static long absTick = 0;
-    private static int tickPerSecond = 60;
+    private static int tickPerSecond = 20;
 
     public static void tick(Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
         /*

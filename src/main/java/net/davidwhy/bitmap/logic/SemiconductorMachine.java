@@ -27,6 +27,7 @@ public class SemiconductorMachine {
     public int create(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
         SemiconductorWire wire = new SemiconductorWire(allNodes, coopNodes);
         wires.add(wire);
+        changedWires.add(wire);
         allNodes.forEach((BlockPos pos) -> {
             nodes.put(pos, wire);
         });
