@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.davidwhy.bitmap.logic.Semiconductor;
 
 public class SemiconductorBlock extends Block {
@@ -34,6 +35,8 @@ public class SemiconductorBlock extends Block {
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
+        if (world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator())
+            return ActionResult.PASS;
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
@@ -66,7 +69,7 @@ public class SemiconductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient || player.isSpectator())
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator())
             return ActionResult.PASS;
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
@@ -91,7 +94,7 @@ public class SemiconductorBlock extends Block {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
             boolean moved) {
-        if (world.isClient)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD)
             return;
 
         int powerLevel = world.getReceivedRedstonePower(pos);
@@ -105,21 +108,20 @@ public class SemiconductorBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (world.isClient || oldState.getBlock() instanceof SemiconductorBlock)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || oldState.getBlock() instanceof SemiconductorBlock)
             return;
-        System.out.println(123);
-        releaseMachine(world, pos);
+        releaseMachine(pos);
     }
 
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onBlockRemoved(state, world, pos, newState, moved);
-        if (world.isClient || newState.getBlock() instanceof SemiconductorBlock)
+        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || newState.getBlock() instanceof SemiconductorBlock)
             return;
-        releaseMachine(world, pos);
+        releaseMachine(pos);
     }
 
-    private void releaseMachine(World world, BlockPos pos) {
+    private void releaseMachine(BlockPos pos) {
         for (int x = -1; x <= 1; x++)
             for (int y = -1; y <= 1; y++)
                 for (int z = -1; z <= 1; z++) {
@@ -168,7 +170,6 @@ public class SemiconductorBlock extends Block {
         if (retc > 0) {
             player.sendMessage(new TranslatableText("message.bitmap.create", retc));
         }
-        ;
     }
 
     static {

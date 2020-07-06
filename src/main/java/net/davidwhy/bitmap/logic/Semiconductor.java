@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class Semiconductor {
 
-    private static int speed = 2;
+    private static int speed = 10;
 
     public static int speedUp() {
         if (speed == 2)
