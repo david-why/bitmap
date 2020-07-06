@@ -41,6 +41,8 @@ public class SemiconductorBlock extends Block {
         Block block = state.getBlock();
         if (!(block instanceof SemiconductorBlock) || player.isSpectator())
             return ActionResult.PASS;
+        if (SemiconductorBlock.world != null && SemiconductorBlock.world != world)
+            return ActionResult.PASS;
         SemiconductorBlock.world = world;
         if (world.isClient)
             return ActionResult.SUCCESS;
@@ -73,6 +75,8 @@ public class SemiconductorBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof SemiconductorBlock))
+            return ActionResult.PASS;
+        if (SemiconductorBlock.world != null && SemiconductorBlock.world != world)
             return ActionResult.PASS;
         SemiconductorBlock.world = world;
         if (itemInHand == Items.GOLDEN_SWORD) {
