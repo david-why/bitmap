@@ -1,5 +1,7 @@
 package net.davidwhy.bitmap.block;
 
+import java.util.HashSet;
+import java.util.Set;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -23,10 +25,10 @@ import net.davidwhy.bitmap.logic.Semiconductor;
 
 public class SemiconductorBlock extends Block {
 
-    private static final IntProperty ON;
+    public static final IntProperty ON;
 
-    public SemiconductorBlock() {
-        super(FabricBlockSettings.copy(Blocks.STONE));
+    public SemiconductorBlock(int luminance) {
+        super(FabricBlockSettings.copyOf(Blocks.STONE).lightLevel(luminance));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
@@ -35,13 +37,14 @@ public class SemiconductorBlock extends Block {
         Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof SemiconductorBlock) || player.isSpectator())
+        Block block = state.getBlock();
+        if (!(block instanceof SemiconductorBlock) || player.isSpectator())
             return ActionResult.PASS;
         if (world.isClient)
             return ActionResult.SUCCESS;
         if (itemInHand == Items.GOLDEN_SWORD) {
             int on = (Integer) state.get(ON);
-            checkMachine(world, pos);
+            checkMachine(player, world, pos);
             if (on == 0) {
                 on = Semiconductor.setCoopBlock(pos) ? 2 : 1;
             } else {
@@ -51,7 +54,7 @@ public class SemiconductorBlock extends Block {
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
-            player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedUp()));
+            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
@@ -70,14 +73,14 @@ public class SemiconductorBlock extends Block {
         if (!(state.getBlock() instanceof SemiconductorBlock))
             return ActionResult.PASS;
         if (itemInHand == Items.GOLDEN_SWORD) {
-            checkMachine(world, pos);
+            checkMachine(player, world, pos);
             if ((Integer) state.get(ON) == 0)
                 return ActionResult.PASS;
-            Semiconductor.powerBlock(pos, 30);
+            Semiconductor.powerBlock(pos);
             world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.STONE_SWORD) {
-            player.sendMessage(new TranslatableText("message.speed", Semiconductor.speedDown()));
+            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()));
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
@@ -92,13 +95,8 @@ public class SemiconductorBlock extends Block {
         if (world.isClient)
             return;
 
-        if (world.getReceivedRedstonePower(pos) > 8) {
-            if ((Integer) state.get(ON) == 1)
-                world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
-        } else {
-            if ((Integer) state.get(ON) == 2)
-                world.setBlockState(pos, (BlockState) state.with(ON, 1), 3);
-        }
+        int powerLevel = world.getReceivedRedstonePower(pos);
+        Semiconductor.powerBlock(pos, neighborPos, powerLevel);
     }
 
     public boolean emitsRedstonePower(BlockState state) {
@@ -121,7 +119,44 @@ public class SemiconductorBlock extends Block {
         Semiconductor.releaseMachine(pos);
     }
 
-    private void checkMachine(World world, BlockPos pos) {
+    private void checkMachine(PlayerEntity player, World world, BlockPos pos) {
+        if (Semiconductor.inMachine(pos))
+            return;
+        Set<BlockPos> allNodes = new HashSet<BlockPos>();
+        Set<BlockPos> coopNodes = new HashSet<BlockPos>();
+        Set<BlockPos> badNodes = new HashSet<BlockPos>();
+        Set<BlockPos> tmpNodes = new HashSet<BlockPos>();
+        tmpNodes.add(pos);
+        while (tmpNodes.size() > 0) {
+            Set<BlockPos> tmpNodes2 = new HashSet<BlockPos>();
+            tmpNodes.forEach((BlockPos tpos) -> {
+                BlockState tstate = world.getBlockState(tpos);
+                if (tstate.getBlock() instanceof SemiconductorBlock) {
+                    if (!allNodes.contains(tpos)) {
+                        allNodes.add(tpos);
+                        if (tstate.get(ON) > 0)
+                            coopNodes.add(tpos);
+                        for (int x = -1; x <= 1; x++)
+                            for (int y = -1; y <= 1; y++)
+                                for (int z = -1; z <= 1; z++) {
+                                    if (x == 0 && y == 0 && z == 0)
+                                        continue;
+                                    BlockPos npos = tpos.add(x, y, z);
+                                    if (!allNodes.contains(npos) && !badNodes.contains(npos))
+                                        tmpNodes2.add(npos);
+                                }
+                    }
+                } else {
+                    badNodes.add(tpos);
+                }
+            });
+            tmpNodes = tmpNodes2;
+        }
+
+        int retc = Semiconductor.createMachine(allNodes, coopNodes);
+        if (retc > 0) {
+            player.sendMessage(new TranslatableText("message.bitmap.create", retc));
+        }
         ;
     }
 

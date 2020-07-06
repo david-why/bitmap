@@ -3,5 +3,6 @@
     "block.bitmap.red_semiconductor_block": "Red semiconductor block",
     "block.bitmap.green_semiconductor_block": "Green semiconductor block",
     "block.bitmap.blue_semiconductor_block": "Blue semiconductor block",
-    "message.speed": "Semiconductor speed changed to %d Hz."
+    "message.bitmap.speed": "Semiconductor speed changed to %d Hz.",
+    "message.bitmap.create": "Create a machine with %d semiconductor blocks."
 }
