@@ -74,12 +74,6 @@ public class SemiconductorMachine {
         pendingWires.add(wire);
     }
 
-    /*
-     * public void tick(long absTick) {
-     * 
-     * }
-     */
-
     public void run(long absTick, int times, Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
         while (pendingTicks.size() > 0) {
             if (pendingTicks.get(0) > absTick)
@@ -105,21 +99,18 @@ public class SemiconductorMachine {
         }
 
         highWires.forEach((SemiconductorWire wire) -> {
-            if (!wire.isHigh()) {
-                lowNodes.addAll(wire.coopNodes);
-            }
+            if (!wire.isHigh())
+                wire.addCoopNodes(lowNodes);
         });
         lowWires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
-                highNodes.addAll(wire.coopNodes);
-            }
+            if (wire.isHigh())
+                wire.addCoopNodes(highNodes);
         });
         changedWires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
-                highNodes.addAll(wire.coopNodes);
-            } else {
-                lowNodes.addAll(wire.coopNodes);
-            }
+            if (wire.isHigh())
+                wire.addCoopNodes(highNodes);
+            else
+                wire.addCoopNodes(lowNodes);
         });
         changedWires.clear();
     }

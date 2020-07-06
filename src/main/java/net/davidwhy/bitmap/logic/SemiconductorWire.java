@@ -5,8 +5,8 @@ import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorWire {
-	public Set<BlockPos> allNodes;
-	public Set<BlockPos> coopNodes;
+	private Set<BlockPos> allNodes;
+	private Set<BlockPos> coopNodes;
 	public Set<SemiconductorWire> enables;
 	private Set<BlockPos> poweredNeighbors;
 	private int poweredCommands;
@@ -55,5 +55,13 @@ public class SemiconductorWire {
 
 	public void unsetCoop(BlockPos pos) {
 		coopNodes.remove(pos);
+	}
+
+	public void addAllNodes(Set<BlockPos> theNodes) {
+		theNodes.addAll(allNodes);
+	}
+
+	public void addCoopNodes(Set<BlockPos> theNodes) {
+		theNodes.addAll(coopNodes);
 	}
 }

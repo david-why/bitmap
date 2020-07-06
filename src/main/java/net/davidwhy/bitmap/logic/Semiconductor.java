@@ -83,17 +83,13 @@ public class Semiconductor {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null)
             return;
-        machine.power(pos, absTick + tickPerSecond * 3 / 2);
+        machine.power(pos, absTick + tickPerSecond);
     }
 
     private static long absTick = 0;
     private static int tickPerSecond = 20;
 
     public static void tick(Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
-        /*
-         * machines.forEach((SemiconductorMachine machine) -> { machine.tick(absTick);
-         * });
-         */
         absTick++;
         if (speed < tickPerSecond && absTick % (tickPerSecond / speed) != 0)
             return;
