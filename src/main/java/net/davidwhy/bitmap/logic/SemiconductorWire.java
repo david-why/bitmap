@@ -9,9 +9,9 @@ public class SemiconductorWire {
 	public Set<BlockPos> coopNodes;
 	public Set<SemiconductorWire> enableOthers;
 	public Set<SemiconductorWire> enableByOthers;
-	public Set<BlockPos> poweredNodes;
-	public int poweredCommands;
-	public Set<SemiconductorWire> currentIn;
+	private Set<BlockPos> poweredNodes;
+	private int poweredCommands;
+	private Set<SemiconductorWire> currentIn;
 
 	private static long staticId = 0;
 	private long wireId;
@@ -45,6 +45,17 @@ public class SemiconductorWire {
 
 	public void decPoweredCommand() {
 		poweredCommands--;
+	}
+
+	public Boolean addIn(SemiconductorWire wire) {
+		Boolean wasEmpty = currentIn.isEmpty();
+		currentIn.add(wire);
+		return wasEmpty;
+	}
+
+	public Boolean removeIn(SemiconductorWire wire) {
+		currentIn.remove(wire);
+		return currentIn.isEmpty();
 	}
 
 	public Boolean power(BlockPos pos, Boolean powered) {

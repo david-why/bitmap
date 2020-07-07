@@ -10,12 +10,12 @@ import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorMachine {
-    public Map<BlockPos, SemiconductorWire> nodes;
-    public Set<SemiconductorWire> wires;
-    public Set<SemiconductorWire> activeWires;
-    public Set<SemiconductorWire> changedWires;
-    public List<Long> pendingTicks;
-    public List<SemiconductorWire> pendingWires;
+    private Map<BlockPos, SemiconductorWire> nodes;
+    private Set<SemiconductorWire> wires;
+    private Set<SemiconductorWire> activeWires;
+    private Set<SemiconductorWire> changedWires;
+    private List<Long> pendingTicks;
+    private List<SemiconductorWire> pendingWires;
 
     public SemiconductorMachine() {
         nodes = new HashMap<BlockPos, SemiconductorWire>();
@@ -234,16 +234,14 @@ public class SemiconductorMachine {
         });
         highWires.forEach((SemiconductorWire wire) -> {
             wire.enableOthers.forEach((SemiconductorWire other) -> {
-                other.currentIn.remove(wire);
-                if (other.currentIn.isEmpty()) {
+                if (other.removeIn(wire)) {
                     nextActiveWires.add(other);
                 }
             });
         });
         lowWires.forEach((SemiconductorWire wire) -> {
             wire.enableOthers.forEach((SemiconductorWire other) -> {
-                other.currentIn.add(wire);
-                if (!other.currentIn.isEmpty()) {
+                if (other.addIn(wire)) {
                     nextActiveWires.add(other);
                 }
             });
