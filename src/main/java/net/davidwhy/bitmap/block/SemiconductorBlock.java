@@ -96,8 +96,8 @@ public class SemiconductorBlock extends Block {
 
     public int getLuminance(BlockState state) {
         return (Integer) state.get(ON) == 2 ? super.getLuminance(state) : 0;
-     }
-  
+    }
+
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         return (Integer) state.get(ON) == 2 ? 8 : 0;
     }

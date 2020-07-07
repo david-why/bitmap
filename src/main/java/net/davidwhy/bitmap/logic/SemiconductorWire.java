@@ -5,10 +5,9 @@ import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorWire {
-	public Set<BlockPos> allNodes;
-	public Set<BlockPos> coopNodes;
-	public Set<SemiconductorWire> enableOthers;
-	public Set<SemiconductorWire> enableByOthers;
+	private Set<BlockPos> allNodes;
+	private Set<BlockPos> coopNodes;
+	private Set<SemiconductorWire> enableOthers;
 	private Set<BlockPos> poweredNodes;
 	private int poweredCommands;
 	private Set<SemiconductorWire> currentIn;
@@ -20,25 +19,23 @@ public class SemiconductorWire {
 		this.allNodes = allNodes;
 		this.coopNodes = coopNodes;
 		this.enableOthers = new HashSet<SemiconductorWire>();
-		this.enableByOthers = new HashSet<SemiconductorWire>();
 		this.poweredNodes = new HashSet<BlockPos>();
 		this.poweredCommands = 0;
 		this.currentIn = new HashSet<SemiconductorWire>();
 		this.wireId = staticId++;
 	}
 
+	public int hashCode() {
+		return (int) wireId;
+	}
 
-    public int hashCode() {
-        return (int)wireId;
-    }
-
-    public boolean equals(Object o) {
+	public boolean equals(Object o) {
 		if (o instanceof SemiconductorWire) {
 			return wireId == ((SemiconductorWire) o).wireId;
 		}
 		return false;
 	}
-	
+
 	public void incPoweredCommand() {
 		poweredCommands++;
 	}
@@ -47,13 +44,13 @@ public class SemiconductorWire {
 		poweredCommands--;
 	}
 
-	public Boolean addIn(SemiconductorWire wire) {
+	private Boolean addIn(SemiconductorWire wire) {
 		Boolean wasEmpty = currentIn.isEmpty();
 		currentIn.add(wire);
 		return wasEmpty;
 	}
 
-	public Boolean removeIn(SemiconductorWire wire) {
+	private Boolean removeIn(SemiconductorWire wire) {
 		currentIn.remove(wire);
 		return currentIn.isEmpty();
 	}
@@ -69,10 +66,10 @@ public class SemiconductorWire {
 	}
 
 	public Boolean isHigh() {
-		return currentIn.size() > 0 || poweredNodes.size() > 0 || poweredCommands > 0; 
+		return currentIn.size() > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
 	}
 
-    public Boolean setCoop(BlockPos pos) {
+	public Boolean setCoop(BlockPos pos) {
 		coopNodes.add(pos);
 		return isHigh();
 	}
@@ -83,7 +80,30 @@ public class SemiconductorWire {
 
 	public void enable(SemiconductorWire wire) {
 		enableOthers.add(wire);
-		wire.enableByOthers.add(this);
 		wire.currentIn.add(this);
+	}
+
+	public void highOut(Set<SemiconductorWire> activeWires) {
+		enableOthers.forEach((SemiconductorWire other) -> {
+			if (other.removeIn(this)) {
+				activeWires.add(other);
+			}
+		});
+	}
+
+	public void lowOut(Set<SemiconductorWire> activeWires) {
+		enableOthers.forEach((SemiconductorWire other) -> {
+			if (other.addIn(this)) {
+				activeWires.add(other);
+			}
+		});
+	}
+
+	public void exportAllNodes(Set<BlockPos> nodes) {
+		nodes.addAll(allNodes);
+	}
+
+	public void exportCoopNodes(Set<BlockPos> nodes) {
+		nodes.addAll(coopNodes);
 	}
 }
