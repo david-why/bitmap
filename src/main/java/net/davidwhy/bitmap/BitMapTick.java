@@ -19,17 +19,19 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
         if (world.dimension.getType() != DimensionType.OVERWORLD) {
             return;
         }
-        Set<BlockPos> lowNodes = new HashSet<BlockPos>();
-        Set<BlockPos> highNodes = new HashSet<BlockPos>();
+        Set<Long> lowNodes = new HashSet<Long>();
+        Set<Long> highNodes = new HashSet<Long>();
         Semiconductor.tick(lowNodes, highNodes);
 
-        lowNodes.forEach((BlockPos pos) -> {
+        lowNodes.forEach((Long a) -> {
+            BlockPos pos = SemiconductorBlock.i2b(a);
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() instanceof SemiconductorBlock) {
                 world.setBlockState(pos, (BlockState) state.with(SemiconductorBlock.ON, 1), 3);
             }
         });
-        highNodes.forEach((BlockPos pos) -> {
+        highNodes.forEach((Long a) -> {
+            BlockPos pos = SemiconductorBlock.i2b(a);
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() instanceof SemiconductorBlock) {
                 world.setBlockState(pos, (BlockState) state.with(SemiconductorBlock.ON, 2), 3);

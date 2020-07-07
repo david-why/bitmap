@@ -2,24 +2,23 @@ package net.davidwhy.bitmap.logic;
 
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorWire {
-	private Set<BlockPos> allNodes;
-	private Set<BlockPos> coopNodes;
+	private Set<Long> allNodes;
+	private Set<Long> coopNodes;
 	private Set<SemiconductorWire> enableOthers;
-	private Set<BlockPos> poweredNodes;
+	private Set<Long> poweredNodes;
 	private int poweredCommands;
 	private Set<SemiconductorWire> currentIn;
 
 	private static long staticId = 0;
 	private long wireId;
 
-	public SemiconductorWire(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
+	public SemiconductorWire(Set<Long> allNodes, Set<Long> coopNodes) {
 		this.allNodes = allNodes;
 		this.coopNodes = coopNodes;
 		this.enableOthers = new HashSet<SemiconductorWire>();
-		this.poweredNodes = new HashSet<BlockPos>();
+		this.poweredNodes = new HashSet<Long>();
 		this.poweredCommands = 0;
 		this.currentIn = new HashSet<SemiconductorWire>();
 		this.wireId = staticId++;
@@ -55,7 +54,7 @@ public class SemiconductorWire {
 		return currentIn.isEmpty();
 	}
 
-	public Boolean power(BlockPos pos, Boolean powered) {
+	public Boolean power(Long pos, Boolean powered) {
 		Boolean wasHigh = isHigh();
 		if (powered) {
 			poweredNodes.add(pos);
@@ -69,12 +68,12 @@ public class SemiconductorWire {
 		return currentIn.size() > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
 	}
 
-	public Boolean setCoop(BlockPos pos) {
+	public Boolean setCoop(Long pos) {
 		coopNodes.add(pos);
 		return isHigh();
 	}
 
-	public void unsetCoop(BlockPos pos) {
+	public void unsetCoop(Long pos) {
 		coopNodes.remove(pos);
 	}
 
@@ -99,11 +98,11 @@ public class SemiconductorWire {
 		});
 	}
 
-	public void exportAllNodes(Set<BlockPos> nodes) {
+	public void exportAllNodes(Set<Long> nodes) {
 		nodes.addAll(allNodes);
 	}
 
-	public void exportCoopNodes(Set<BlockPos> nodes) {
+	public void exportCoopNodes(Set<Long> nodes) {
 		nodes.addAll(coopNodes);
 	}
 }

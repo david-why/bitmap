@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraft.util.math.BlockPos;
 
 public class Semiconductor {
 
@@ -26,41 +25,41 @@ public class Semiconductor {
         return speed;
     }
 
-    private static Map<BlockPos, SemiconductorMachine> nodes = new HashMap<BlockPos, SemiconductorMachine>();
+    private static Map<Long, SemiconductorMachine> nodes = new HashMap<Long, SemiconductorMachine>();
     private static List<SemiconductorMachine> machines = new ArrayList<SemiconductorMachine>();
 
-    public static int createMachine(Set<BlockPos> allNodes, Set<BlockPos> coopNodes, Set<BlockPos> poweredNodes) {
-        allNodes.forEach((BlockPos pos) -> {
+    public static int createMachine(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
+        allNodes.forEach((Long pos) -> {
             releaseMachine(pos);
         });
         SemiconductorMachine machine = new SemiconductorMachine();
-        allNodes.forEach((BlockPos pos) -> {
+        allNodes.forEach((Long pos) -> {
             nodes.put(pos, machine);
         });
         machines.add(machine);
         return machine.create(allNodes, coopNodes, poweredNodes);
     }
 
-    public static Set<BlockPos> releaseMachine(BlockPos pos) {
+    public static Set<Long> releaseMachine(Long pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return null;
         }
         machines.remove(machine);
-        Set<BlockPos> allNodes = new HashSet<BlockPos>();
-        Set<BlockPos> coopNodes = new HashSet<BlockPos>();
+        Set<Long> allNodes = new HashSet<Long>();
+        Set<Long> coopNodes = new HashSet<Long>();
         machine.release(allNodes, coopNodes);
-        allNodes.forEach((BlockPos tpos) -> {
-            nodes.remove(tpos);
+        allNodes.forEach((Long a) -> {
+            nodes.remove(a);
         });
         return coopNodes;
     }
 
-    public static Boolean inMachine(BlockPos pos) {
+    public static Boolean inMachine(Long pos) {
         return nodes.containsKey(pos);
     }
 
-    public static Boolean setCoopBlock(BlockPos pos) {
+    public static Boolean setCoopBlock(Long pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return false;
@@ -68,7 +67,7 @@ public class Semiconductor {
         return machine.setCoop(pos);
     }
 
-    public static void unsetCoopBlock(BlockPos pos) {
+    public static void unsetCoopBlock(Long pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return;
@@ -76,7 +75,7 @@ public class Semiconductor {
         machine.unsetCoop(pos);
     }
 
-    public static void powerBlock(BlockPos pos, Boolean powered) {
+    public static void powerBlock(Long pos, Boolean powered) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return;
@@ -84,7 +83,7 @@ public class Semiconductor {
         machine.power(pos, powered);
     }
 
-    public static void powerBlock(BlockPos pos) {
+    public static void powerBlock(Long pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return;
@@ -95,7 +94,7 @@ public class Semiconductor {
     private static long absTick = 0;
     private static int tickPerSecond = 20;
 
-    public static void tick(Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
+    public static void tick(Set<Long> lowNodes, Set<Long> highNodes) {
         absTick++;
         if (speed < tickPerSecond && absTick % (tickPerSecond / speed) != 0) {
             return;

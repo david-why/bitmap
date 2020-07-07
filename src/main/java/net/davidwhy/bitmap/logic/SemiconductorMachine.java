@@ -7,10 +7,8 @@ import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.util.math.BlockPos;
-
 public class SemiconductorMachine {
-    private Map<BlockPos, SemiconductorWire> nodes;
+    private Map<Long, SemiconductorWire> nodes;
     private Set<SemiconductorWire> wires;
     private Set<SemiconductorWire> activeWires;
     private Set<SemiconductorWire> changedWires;
@@ -18,7 +16,7 @@ public class SemiconductorMachine {
     private List<SemiconductorWire> pendingWires;
 
     public SemiconductorMachine() {
-        nodes = new HashMap<BlockPos, SemiconductorWire>();
+        nodes = new HashMap<Long, SemiconductorWire>();
         wires = new HashSet<SemiconductorWire>();
         activeWires = new HashSet<SemiconductorWire>();
         changedWires = new HashSet<SemiconductorWire>();
@@ -44,43 +42,39 @@ public class SemiconductorMachine {
         }
     }
 
-    public int create(Set<BlockPos> allNodes, Set<BlockPos> coopNodes, Set<BlockPos> poweredNodes) {
-        Map<Long, BlockPos> allLongs = new HashMap<Long, BlockPos>();
+    public int create(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
         Map<Long, Long> masterLongs = new HashMap<Long, Long>();
         Map<Long, Set<Long>> slaveLongs = new HashMap<Long, Set<Long>>();
         Map<Long, Set<Long>> enableLongs = new HashMap<Long, Set<Long>>();
-        allNodes.forEach((BlockPos pos) -> {
-            long a = 0x10000000000L * (0x80000 + pos.getX()) + 0x100000L * (0x80000 + pos.getY())
-                    + (0x80000 + pos.getZ());
-            allLongs.put(a, pos);
+        allNodes.forEach((Long a) -> {
             masterLongs.put(a, a);
             Set<Long> slaves = new HashSet<Long>();
             slaves.add(a);
             slaveLongs.put(a, slaves);
         });
-        allLongs.forEach((Long a, BlockPos pos) -> {
+        allNodes.forEach((Long a) -> {
             for (int i = 0; i < dirs.length; i++) {
                 long b = a + dirs[i][0];
-                if (allLongs.containsKey(b)) {
+                if (allNodes.contains(b)) {
                     connectWire(a, b, masterLongs, slaveLongs);
                     continue;
                 }
                 long c = a + dirs[i][0] * 2;
-                if (!allLongs.containsKey(c)) {
+                if (!allNodes.contains(c)) {
                     continue;
                 }
                 for (int j = 1; j <= 2; j++) {
-                    if (allLongs.containsKey(a + dirs[i][j]) || allLongs.containsKey(a - dirs[i][j])) {
+                    if (allNodes.contains(a + dirs[i][j]) || allNodes.contains(a - dirs[i][j])) {
                         continue;
                     }
-                    if (!allLongs.containsKey(b + dirs[i][j]) || !allLongs.containsKey(b - dirs[i][j])) {
+                    if (!allNodes.contains(b + dirs[i][j]) || !allNodes.contains(b - dirs[i][j])) {
                         continue;
                     }
-                    if (!allLongs.containsKey(c + dirs[i][j]) && !allLongs.containsKey(c - dirs[i][j])) {
+                    if (!allNodes.contains(c + dirs[i][j]) && !allNodes.contains(c - dirs[i][j])) {
                         connectWire(a, c, masterLongs, slaveLongs);
                         continue;
                     }
-                    if (allLongs.containsKey(c + dirs[i][j]) && allLongs.containsKey(c - dirs[i][j])) {
+                    if (allNodes.contains(c + dirs[i][j]) && allNodes.contains(c - dirs[i][j])) {
                         if (enableLongs.containsKey(c)) {
                             enableLongs.get(c).add(a);
                         } else {
@@ -95,37 +89,35 @@ public class SemiconductorMachine {
         });
 
         slaveLongs.forEach((Long a, Set<Long> slaves) -> {
-            Set<BlockPos> allWireNodes = new HashSet<BlockPos>();
-            Set<BlockPos> coopWireNodes = new HashSet<BlockPos>();
+            Set<Long> allWireNodes = new HashSet<Long>();
+            Set<Long> coopWireNodes = new HashSet<Long>();
             slaves.forEach((Long b) -> {
-                BlockPos p = allLongs.get(b);
-                allWireNodes.add(p);
-                if (coopNodes.contains(p)) {
-                    coopWireNodes.add(p);
+                allWireNodes.add(b);
+                if (coopNodes.contains(b)) {
+                    coopWireNodes.add(b);
                 }
             });
             SemiconductorWire wire = new SemiconductorWire(allWireNodes, coopWireNodes);
             wires.add(wire);
             slaves.forEach((Long b) -> {
-                BlockPos p = allLongs.get(b);
-                nodes.put(p, wire);
+                nodes.put(b, wire);
             });
         });
 
         enableLongs.forEach((Long a, Set<Long> enables) -> {
-            BlockPos p = allLongs.get(masterLongs.get(a));
+            Long p = masterLongs.get(a);
             SemiconductorWire wire = nodes.get(p);
             enables.forEach((Long c) -> {
-                BlockPos q = allLongs.get(masterLongs.get(c));
+                Long q = masterLongs.get(c);
                 SemiconductorWire other = nodes.get(q);
                 wire.enable(other);
             });
         });
 
-        poweredNodes.forEach((BlockPos pos) -> {
-            SemiconductorWire wire = nodes.get(pos);
+        poweredNodes.forEach((Long a) -> {
+            SemiconductorWire wire = nodes.get(a);
             if (wire != null) {
-                wire.power(pos, true);
+                wire.power(a, true);
             }
         });
 
@@ -133,7 +125,7 @@ public class SemiconductorMachine {
         return allNodes.size();
     }
 
-    public void release(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
+    public void release(Set<Long> allNodes, Set<Long> coopNodes) {
         wires.forEach((SemiconductorWire wire) -> {
             if (allNodes != null) {
                 wire.exportAllNodes(allNodes);
@@ -144,7 +136,7 @@ public class SemiconductorMachine {
         });
     }
 
-    public Boolean setCoop(BlockPos pos) {
+    public Boolean setCoop(Long pos) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return false;
@@ -152,7 +144,7 @@ public class SemiconductorMachine {
         return wire.setCoop(pos);
     }
 
-    public void unsetCoop(BlockPos pos) {
+    public void unsetCoop(Long pos) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -160,7 +152,7 @@ public class SemiconductorMachine {
         wire.unsetCoop(pos);
     }
 
-    public void power(BlockPos pos, Boolean powered) {
+    public void power(Long pos, Boolean powered) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -169,7 +161,7 @@ public class SemiconductorMachine {
         changedWires.add(wire);
     }
 
-    public void power(BlockPos pos, long absTick) {
+    public void power(Long pos, long absTick) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -180,7 +172,7 @@ public class SemiconductorMachine {
         pendingWires.add(wire);
     }
 
-    public void run(long absTick, int times, Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
+    public void run(long absTick, int times, Set<Long> lowNodes, Set<Long> highNodes) {
         while (pendingTicks.size() > 0) {
             if (pendingTicks.get(0) > absTick) {
                 break;

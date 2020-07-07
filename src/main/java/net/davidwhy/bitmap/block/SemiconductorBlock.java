@@ -52,9 +52,9 @@ public class SemiconductorBlock extends Block {
             int on = (Integer) state.get(ON);
             checkMachine(player, world, pos);
             if (on == 0) {
-                on = Semiconductor.setCoopBlock(pos) ? 2 : 1;
+                on = Semiconductor.setCoopBlock(b2i(pos)) ? 2 : 1;
             } else {
-                Semiconductor.unsetCoopBlock(pos);
+                Semiconductor.unsetCoopBlock(b2i(pos));
                 on = 0;
             }
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
@@ -81,7 +81,7 @@ public class SemiconductorBlock extends Block {
             if ((Integer) state.get(ON) == 0) {
                 return ActionResult.PASS;
             }
-            Semiconductor.powerBlock(pos);
+            Semiconductor.powerBlock(b2i(pos));
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()));
@@ -108,7 +108,7 @@ public class SemiconductorBlock extends Block {
             return;
         }
         int powerLevel = world.getReceivedRedstonePower(pos);
-        Semiconductor.powerBlock(pos, powerLevel > 8);
+        Semiconductor.powerBlock(b2i(pos), powerLevel > 8);
     }
 
     public boolean emitsRedstonePower(BlockState state) {
@@ -142,13 +142,14 @@ public class SemiconductorBlock extends Block {
                     if (x == 0 && y == 0 && z == 0) {
                         continue;
                     }
-                    BlockPos npos = pos.add(x, y, z);
-                    Set<BlockPos> coopNodes = Semiconductor.releaseMachine(npos);
+                    BlockPos u = pos.add(x, y, z);
+                    Set<Long> coopNodes = Semiconductor.releaseMachine(b2i(u));
                     if (coopNodes != null) {
-                        coopNodes.forEach((BlockPos tpos) -> {
-                            BlockState state = world.getBlockState(tpos);
+                        coopNodes.forEach((Long a) -> {
+                            BlockPos t = i2b(a);
+                            BlockState state = world.getBlockState(t);
                             if (state.getBlock() instanceof SemiconductorBlock) {
-                                world.setBlockState(tpos, (BlockState) state.with(ON, 1), 3);
+                                world.setBlockState(t, (BlockState) state.with(ON, 1), 3);
                             }
                         });
                     }
@@ -158,45 +159,45 @@ public class SemiconductorBlock extends Block {
     }
 
     private void checkMachine(PlayerEntity player, World world, BlockPos pos) {
-        if (Semiconductor.inMachine(pos)) {
+        if (Semiconductor.inMachine(b2i(pos))) {
             return;
         }
-        Set<BlockPos> allNodes = new HashSet<BlockPos>();
-        Set<BlockPos> coopNodes = new HashSet<BlockPos>();
-        Set<BlockPos> poweredNodes = new HashSet<BlockPos>();
+        Set<Long> allNodes = new HashSet<Long>();
+        Set<Long> coopNodes = new HashSet<Long>();
+        Set<Long> poweredNodes = new HashSet<Long>();
         Set<BlockPos> badNodes = new HashSet<BlockPos>();
         Set<BlockPos> tmpNodes = new HashSet<BlockPos>();
         tmpNodes.add(pos);
         while (tmpNodes.size() > 0) {
             Set<BlockPos> tmpNodes2 = new HashSet<BlockPos>();
-            tmpNodes.forEach((BlockPos tpos) -> {
-                BlockState tstate = world.getBlockState(tpos);
+            tmpNodes.forEach((BlockPos t) -> {
+                BlockState tstate = world.getBlockState(t);
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
-                    if (!allNodes.contains(tpos)) {
-                        allNodes.add(tpos);
+                    if (!allNodes.contains(b2i(t))) {
+                        allNodes.add(b2i(t));
                         if (allNodes.size() % 1000 == 0) {
                             player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()));
                         }
                         if (tstate.get(ON) > 0) {
-                            coopNodes.add(tpos);
+                            coopNodes.add(b2i(t));
                         }
-                        if (world.getReceivedRedstonePower(tpos) > 8) {
-                            poweredNodes.add(tpos);
+                        if (world.getReceivedRedstonePower(t) > 8) {
+                            poweredNodes.add(b2i(t));
                         }
                         for (int x = -1; x <= 1; x++) {
                             for (int y = -1; y <= 1; y++) {
                                 for (int z = -1; z <= 1; z++) {
                                     if (x == 0 && y == 0 && z == 0)
                                         continue;
-                                    BlockPos npos = tpos.add(x, y, z);
-                                    if (!allNodes.contains(npos) && !badNodes.contains(npos))
-                                        tmpNodes2.add(npos);
+                                    BlockPos u = t.add(x, y, z);
+                                    if (!allNodes.contains(b2i(u)) && !badNodes.contains(u))
+                                        tmpNodes2.add(u);
                                 }
                             }
                         }
                     }
                 } else {
-                    badNodes.add(tpos);
+                    badNodes.add(t);
                 }
             });
             tmpNodes = tmpNodes2;
@@ -206,6 +207,14 @@ public class SemiconductorBlock extends Block {
         if (retc > 0) {
             player.sendMessage(new TranslatableText("message.bitmap.create", retc));
         }
+    }
+
+    public static long b2i(BlockPos pos) {
+        return 0x10000000000L * (0x80000 + pos.getX()) + 0x100000L * (0x80000 + pos.getY()) + (0x80000 + pos.getZ());
+    }
+
+    public static BlockPos i2b(long a) {
+        return new BlockPos((0xfffff & (a >> 40)) - 0x80000, (0xfffff & (a >> 20)) - 0x80000, (0xfffff & a) - 0x80000);
     }
 
     static {
