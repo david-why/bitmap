@@ -29,7 +29,7 @@ public class Semiconductor {
     private static Map<BlockPos, SemiconductorMachine> nodes = new HashMap<BlockPos, SemiconductorMachine>();
     private static List<SemiconductorMachine> machines = new ArrayList<SemiconductorMachine>();
 
-    public static int createMachine(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
+    public static int createMachine(Set<BlockPos> allNodes, Set<BlockPos> coopNodes, Set<BlockPos> poweredNodes) {
         allNodes.forEach((BlockPos pos) -> {
             releaseMachine(pos);
         });
@@ -38,13 +38,14 @@ public class Semiconductor {
             nodes.put(pos, machine);
         });
         machines.add(machine);
-        return machine.create(allNodes, coopNodes);
+        return machine.create(allNodes, coopNodes, poweredNodes);
     }
 
     public static Set<BlockPos> releaseMachine(BlockPos pos) {
         SemiconductorMachine machine = nodes.get(pos);
-        if (machine == null)
+        if (machine == null) {
             return null;
+        }
         machines.remove(machine);
         Set<BlockPos> allNodes = new HashSet<BlockPos>();
         Set<BlockPos> coopNodes = new HashSet<BlockPos>();
@@ -61,29 +62,33 @@ public class Semiconductor {
 
     public static Boolean setCoopBlock(BlockPos pos) {
         SemiconductorMachine machine = nodes.get(pos);
-        if (machine == null)
+        if (machine == null) {
             return false;
+        }
         return machine.setCoop(pos);
     }
 
     public static void unsetCoopBlock(BlockPos pos) {
         SemiconductorMachine machine = nodes.get(pos);
-        if (machine == null)
+        if (machine == null) {
             return;
+        }
         machine.unsetCoop(pos);
     }
 
-    public static void powerBlock(BlockPos pos, BlockPos neighborPos, int powerLevel) {
+    public static void powerBlock(BlockPos pos, Boolean powered) {
         SemiconductorMachine machine = nodes.get(pos);
-        if (machine == null)
+        if (machine == null) {
             return;
-        machine.power(pos, neighborPos, powerLevel);
+        }
+        machine.power(pos, powered);
     }
 
     public static void powerBlock(BlockPos pos) {
         SemiconductorMachine machine = nodes.get(pos);
-        if (machine == null)
+        if (machine == null) {
             return;
+        }
         machine.power(pos, absTick + tickPerSecond);
     }
 
@@ -92,8 +97,9 @@ public class Semiconductor {
 
     public static void tick(Set<BlockPos> lowNodes, Set<BlockPos> highNodes) {
         absTick++;
-        if (speed < tickPerSecond && absTick % (tickPerSecond / speed) != 0)
+        if (speed < tickPerSecond && absTick % (tickPerSecond / speed) != 0) {
             return;
+        }
 
         machines.forEach((SemiconductorMachine machine) -> {
             machine.run(absTick, speed < tickPerSecond ? 1 : speed / tickPerSecond, lowNodes, highNodes);

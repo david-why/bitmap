@@ -66,10 +66,6 @@ public class SemiconductorBlock extends Block {
         return ActionResult.PASS;
     }
 
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(ON);
-    }
-
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
         if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator()) {
@@ -94,6 +90,14 @@ public class SemiconductorBlock extends Block {
         return ActionResult.PASS;
     }
 
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(ON);
+    }
+
+    public int getLuminance(BlockState state) {
+        return (Integer) state.get(ON) == 2 ? super.getLuminance(state) : 0;
+     }
+  
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         return (Integer) state.get(ON) == 2 ? 8 : 0;
     }
@@ -104,7 +108,7 @@ public class SemiconductorBlock extends Block {
             return;
         }
         int powerLevel = world.getReceivedRedstonePower(pos);
-        Semiconductor.powerBlock(pos, neighborPos, powerLevel);
+        Semiconductor.powerBlock(pos, powerLevel > 8);
     }
 
     public boolean emitsRedstonePower(BlockState state) {
@@ -159,6 +163,7 @@ public class SemiconductorBlock extends Block {
         }
         Set<BlockPos> allNodes = new HashSet<BlockPos>();
         Set<BlockPos> coopNodes = new HashSet<BlockPos>();
+        Set<BlockPos> poweredNodes = new HashSet<BlockPos>();
         Set<BlockPos> badNodes = new HashSet<BlockPos>();
         Set<BlockPos> tmpNodes = new HashSet<BlockPos>();
         tmpNodes.add(pos);
@@ -169,8 +174,14 @@ public class SemiconductorBlock extends Block {
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
                     if (!allNodes.contains(tpos)) {
                         allNodes.add(tpos);
+                        if (allNodes.size() % 1000 == 0) {
+                            player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()));
+                        }
                         if (tstate.get(ON) > 0) {
                             coopNodes.add(tpos);
+                        }
+                        if (world.getReceivedRedstonePower(tpos) > 8) {
+                            poweredNodes.add(tpos);
                         }
                         for (int x = -1; x <= 1; x++) {
                             for (int y = -1; y <= 1; y++) {
@@ -191,7 +202,7 @@ public class SemiconductorBlock extends Block {
             tmpNodes = tmpNodes2;
         }
 
-        int retc = Semiconductor.createMachine(allNodes, coopNodes);
+        int retc = Semiconductor.createMachine(allNodes, coopNodes, poweredNodes);
         if (retc > 0) {
             player.sendMessage(new TranslatableText("message.bitmap.create", retc));
         }

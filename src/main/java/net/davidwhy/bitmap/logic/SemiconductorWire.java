@@ -5,47 +5,60 @@ import java.util.Set;
 import net.minecraft.util.math.BlockPos;
 
 public class SemiconductorWire {
-	private Set<BlockPos> allNodes;
-	private Set<BlockPos> coopNodes;
-	public Set<SemiconductorWire> enables;
-	private Set<BlockPos> poweredNeighbors;
-	private int poweredCommands;
-	public int currentIn;
-	public int nextIn;
+	public Set<BlockPos> allNodes;
+	public Set<BlockPos> coopNodes;
+	public Set<SemiconductorWire> enableOthers;
+	public Set<SemiconductorWire> enableByOthers;
+	public Set<BlockPos> poweredNodes;
+	public int poweredCommands;
+	public Set<SemiconductorWire> currentIn;
+
+	private static long staticId = 0;
+	private long wireId;
 
 	public SemiconductorWire(Set<BlockPos> allNodes, Set<BlockPos> coopNodes) {
 		this.allNodes = allNodes;
 		this.coopNodes = coopNodes;
-		this.enables = new HashSet<SemiconductorWire>();
-		this.poweredNeighbors = new HashSet<BlockPos>();
+		this.enableOthers = new HashSet<SemiconductorWire>();
+		this.enableByOthers = new HashSet<SemiconductorWire>();
+		this.poweredNodes = new HashSet<BlockPos>();
 		this.poweredCommands = 0;
-		this.currentIn = this.nextIn = 0;
+		this.currentIn = new HashSet<SemiconductorWire>();
+		this.wireId = staticId++;
 	}
 
-	public Boolean incPoweredCommand() {
-		Boolean wasHigh = isHigh();
+
+    public int hashCode() {
+        return (int)wireId;
+    }
+
+    public boolean equals(Object o) {
+		if (o instanceof SemiconductorWire) {
+			return wireId == ((SemiconductorWire) o).wireId;
+		}
+		return false;
+	}
+	
+	public void incPoweredCommand() {
 		poweredCommands++;
-		return wasHigh != isHigh();
 	}
 
-	public Boolean decPoweredCommand() {
-		Boolean wasHigh = isHigh();
+	public void decPoweredCommand() {
 		poweredCommands--;
-		return wasHigh != isHigh();
 	}
 
-	public Boolean power(BlockPos neighborPos, int powerLevel) {
+	public Boolean power(BlockPos pos, Boolean powered) {
 		Boolean wasHigh = isHigh();
-		if (powerLevel > 8) {
-			poweredNeighbors.add(neighborPos);
+		if (powered) {
+			poweredNodes.add(pos);
 		} else {
-			poweredNeighbors.remove(neighborPos);
+			poweredNodes.remove(pos);
 		}
 		return wasHigh != isHigh();
 	}
 
 	public Boolean isHigh() {
-		return enables.size() > 0 || poweredNeighbors.size() > 0 || poweredCommands > 0; 
+		return currentIn.size() > 0 || poweredNodes.size() > 0 || poweredCommands > 0; 
 	}
 
     public Boolean setCoop(BlockPos pos) {
@@ -57,11 +70,9 @@ public class SemiconductorWire {
 		coopNodes.remove(pos);
 	}
 
-	public void addAllNodes(Set<BlockPos> theNodes) {
-		theNodes.addAll(allNodes);
-	}
-
-	public void addCoopNodes(Set<BlockPos> theNodes) {
-		theNodes.addAll(coopNodes);
+	public void enable(SemiconductorWire wire) {
+		enableOthers.add(wire);
+		wire.enableByOthers.add(this);
+		wire.currentIn.add(this);
 	}
 }
