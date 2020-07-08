@@ -1,11 +1,9 @@
 package net.davidwhy.bitmap.logic;
 
-import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
 public class Semiconductor {
 
@@ -28,7 +26,7 @@ public class Semiconductor {
     }
 
     private static Map<Long, SemiconductorMachine> nodes = new HashMap<Long, SemiconductorMachine>();
-    private static List<SemiconductorMachine> machines = new ArrayList<SemiconductorMachine>();
+    private static Set<SemiconductorMachine> machines = new HashSet<SemiconductorMachine>();
 
     public static int createMachine(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
         allNodes.forEach((Long pos) -> {

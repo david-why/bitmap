@@ -1,19 +1,23 @@
 package net.davidwhy.bitmap.logic;
 
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class SemiconductorMachine {
+
     private Map<Long, SemiconductorWire> nodes;
     private Set<SemiconductorWire> wires;
     private Set<SemiconductorWire> activeWires;
     private Set<SemiconductorWire> changedWires;
     private List<Long> pendingTicks;
     private List<SemiconductorWire> pendingWires;
+
+    private static long staticId = 0;
+    private long machineId;
 
     public SemiconductorMachine() {
         nodes = new HashMap<Long, SemiconductorWire>();
@@ -22,6 +26,18 @@ public class SemiconductorMachine {
         changedWires = new HashSet<SemiconductorWire>();
         pendingTicks = new ArrayList<Long>();
         pendingWires = new ArrayList<SemiconductorWire>();
+        this.machineId = staticId++;
+    }
+
+    public int hashCode() {
+        return (int) machineId;
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof SemiconductorMachine) {
+            return machineId == ((SemiconductorMachine) o).machineId;
+        }
+        return false;
     }
 
     private static long dirs[][] = { { 0x10000000000L, 0x100000L, 0x1L }, { 0x100000L, 0x10000000000L, 0x1L },
@@ -225,8 +241,7 @@ public class SemiconductorMachine {
         activeWires.forEach((SemiconductorWire wire) -> {
             if (wire.isHigh()) {
                 highWires.add(wire);
-            }
-            if (!wire.isHigh()) {
+            } else {
                 lowWires.add(wire);
             }
         });
