@@ -239,9 +239,10 @@ public class SemiconductorMachine {
         Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
         Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
         activeWires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
+            if (wire.goHigh()) {
                 highWires.add(wire);
-            } else {
+            }
+            if (wire.goLow()) {
                 lowWires.add(wire);
             }
         });

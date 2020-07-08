@@ -10,7 +10,8 @@ public class SemiconductorWire {
     private Set<SemiconductorWire> enableOthers;
     private Set<Long> poweredNodes;
     private int poweredCommands;
-    private Set<SemiconductorWire> currentIn;
+    private int currentIn;
+    private Boolean wasHigh;
 
     private static long staticId = 0;
     private long wireId;
@@ -21,7 +22,8 @@ public class SemiconductorWire {
         this.enableOthers = new HashSet<SemiconductorWire>();
         this.poweredNodes = new HashSet<Long>();
         this.poweredCommands = 0;
-        this.currentIn = new HashSet<SemiconductorWire>();
+        this.currentIn = 0;
+        this.wasHigh = false;
         this.wireId = staticId++;
     }
 
@@ -55,7 +57,7 @@ public class SemiconductorWire {
     }
 
     public Boolean isHigh() {
-        return currentIn.size() > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
+        return currentIn > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
     }
 
     public Boolean setCoop(Long pos) {
@@ -69,12 +71,28 @@ public class SemiconductorWire {
 
     public void enable(SemiconductorWire wire) {
         enableOthers.add(wire);
-        wire.currentIn.add(this);
+        wire.currentIn++;
+    }
+
+    public Boolean goHigh() {
+        if (wasHigh || !isHigh()) {
+            return false;
+        }
+        wasHigh = true;
+        return true;
+    }
+
+    public Boolean goLow() {
+        if (!wasHigh || isHigh()) {
+            return false;
+        }
+        wasHigh = false;
+        return true;
     }
 
     public void highOut(Set<SemiconductorWire> activeWires) {
         enableOthers.forEach((SemiconductorWire other) -> {
-            if (other.removeIn(this)) {
+            if (--other.currentIn == 0) {
                 activeWires.add(other);
             }
         });
@@ -82,21 +100,10 @@ public class SemiconductorWire {
 
     public void lowOut(Set<SemiconductorWire> activeWires) {
         enableOthers.forEach((SemiconductorWire other) -> {
-            if (other.addIn(this)) {
+            if (other.currentIn++ == 0) {
                 activeWires.add(other);
             }
         });
-    }
-
-    private Boolean addIn(SemiconductorWire wire) {
-        Boolean wasEmpty = currentIn.isEmpty();
-        currentIn.add(wire);
-        return wasEmpty;
-    }
-
-    private Boolean removeIn(SemiconductorWire wire) {
-        currentIn.remove(wire);
-        return currentIn.isEmpty();
     }
 
     public void exportAllNodes(Set<Long> nodes) {
