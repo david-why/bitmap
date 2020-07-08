@@ -107,8 +107,14 @@ public class SemiconductorBlock extends Block {
         if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD) {
             return;
         }
+        if (block instanceof SemiconductorBlock) {
+            return;
+        }
         int powerLevel = world.getReceivedRedstonePower(pos);
         Semiconductor.powerBlock(b2i(pos), powerLevel > 8);
+        if (powerLevel > 8 && (Integer) state.get(ON) == 1) {
+            world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
+        }
     }
 
     public boolean emitsRedstonePower(BlockState state) {
