@@ -12,16 +12,18 @@ public class Semiconductor {
     private static int speed = 10;
 
     public static int speedUp() {
-        if (speed == 2)
+        if (speed == 2) {
             speed = 5;
-        else if (speed < 1000000)
+        } else if (speed < 1000000) {
             speed *= 2;
+        }
         return speed;
     }
 
     public static int speedDown() {
-        if (speed > 1)
+        if (speed > 1) {
             speed /= 2;
+        }
         return speed;
     }
 
