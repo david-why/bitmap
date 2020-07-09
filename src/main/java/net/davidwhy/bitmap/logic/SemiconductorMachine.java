@@ -12,7 +12,6 @@ public class SemiconductorMachine {
     private Map<Long, SemiconductorWire> nodes;
     private Set<SemiconductorWire> wires;
     private Set<SemiconductorWire> activeWires;
-    private Set<SemiconductorWire> changedWires;
     private List<Long> pendingTicks;
     private List<SemiconductorWire> pendingWires;
 
@@ -23,10 +22,9 @@ public class SemiconductorMachine {
         nodes = new HashMap<Long, SemiconductorWire>();
         wires = new HashSet<SemiconductorWire>();
         activeWires = new HashSet<SemiconductorWire>();
-        changedWires = new HashSet<SemiconductorWire>();
         pendingTicks = new ArrayList<Long>();
         pendingWires = new ArrayList<SemiconductorWire>();
-        this.machineId = staticId++;
+        machineId = staticId++;
     }
 
     public int hashCode() {
@@ -137,7 +135,7 @@ public class SemiconductorMachine {
             }
         });
 
-        changedWires.addAll(wires);
+        activeWires.addAll(wires);
         return allNodes.size();
     }
 
@@ -174,7 +172,7 @@ public class SemiconductorMachine {
             return;
         }
         wire.power(pos, powered);
-        changedWires.add(wire);
+        activeWires.add(wire);
     }
 
     public void power(Long pos, long absTick) {
@@ -183,29 +181,49 @@ public class SemiconductorMachine {
             return;
         }
         wire.incPoweredCommand();
-        changedWires.add(wire);
+        activeWires.add(wire);
         pendingTicks.add(absTick);
         pendingWires.add(wire);
     }
 
     public void run(long absTick, int times, Set<Long> lowNodes, Set<Long> highNodes) {
-        while (pendingTicks.size() > 0) {
-            if (pendingTicks.get(0) > absTick) {
-                break;
-            }
+        while (pendingTicks.size() > 0 && pendingTicks.get(0) <= absTick) {
             SemiconductorWire wire = pendingWires.get(0);
             wire.decPoweredCommand();
-            changedWires.add(wire);
+            activeWires.add(wire);
             pendingTicks.remove(0);
             pendingWires.remove(0);
         }
 
         Set<SemiconductorWire> highNotifyWires = new HashSet<SemiconductorWire>();
         Set<SemiconductorWire> lowNotifyWires = new HashSet<SemiconductorWire>();
+        Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
+        Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
 
-        activeWires.addAll(changedWires);
         while (times-- > 0) {
-            runOnce(highNotifyWires, lowNotifyWires);
+            highWires.clear();
+            lowWires.clear();
+            activeWires.forEach((SemiconductorWire wire) -> {
+                if (wire.goHigh()) {
+                    highWires.add(wire);
+                    if (highNotifyWires.add(wire)) {
+                        lowNotifyWires.remove(wire);
+                    }
+                }
+                if (wire.goLow()) {
+                    lowWires.add(wire);
+                    if (lowNotifyWires.add(wire)) {
+                        highNotifyWires.remove(wire);
+                    }
+                }
+            });
+            activeWires.clear();
+            highWires.forEach((SemiconductorWire wire) -> {
+                wire.highOut(activeWires);
+            });
+            lowWires.forEach((SemiconductorWire wire) -> {
+                wire.lowOut(activeWires);
+            });
         }
 
         lowNotifyWires.forEach((SemiconductorWire wire) -> {
@@ -213,42 +231,6 @@ public class SemiconductorMachine {
         });
         highNotifyWires.forEach((SemiconductorWire wire) -> {
             wire.exportCoopNodes(highNodes);
-        });
-        /*
-        changedWires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
-                wire.exportCoopNodes(highNodes);
-            } else {
-                wire.exportCoopNodes(lowNodes);
-            }
-        });
-        */
-        changedWires.clear();
-    }
-
-    private void runOnce(Set<SemiconductorWire> highNotifyWires, Set<SemiconductorWire> lowNotifyWires) {
-        Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
-        Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
-        activeWires.forEach((SemiconductorWire wire) -> {
-            if (wire.goHigh()) {
-                highWires.add(wire);
-                if (highNotifyWires.add(wire)) {
-                    lowNotifyWires.remove(wire);
-                }
-            }
-            if (wire.goLow()) {
-                lowWires.add(wire);
-                if (lowNotifyWires.add(wire)) {
-                    highNotifyWires.remove(wire);
-                }
-            }
-        });
-        activeWires.clear();
-        highWires.forEach((SemiconductorWire wire) -> {
-            wire.highOut(activeWires);
-        });
-        lowWires.forEach((SemiconductorWire wire) -> {
-            wire.lowOut(activeWires);
         });
     }
 }

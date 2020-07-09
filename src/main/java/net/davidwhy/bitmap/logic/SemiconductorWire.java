@@ -19,12 +19,12 @@ public class SemiconductorWire {
     public SemiconductorWire(Set<Long> allNodes, Set<Long> coopNodes) {
         this.allNodes = allNodes;
         this.coopNodes = coopNodes;
-        this.enableOthers = new HashSet<SemiconductorWire>();
-        this.poweredNodes = new HashSet<Long>();
-        this.poweredCommands = 0;
-        this.currentIn = 0;
-        this.wasHigh = false;
-        this.wireId = staticId++;
+        enableOthers = new HashSet<SemiconductorWire>();
+        poweredNodes = new HashSet<Long>();
+        poweredCommands = 0;
+        currentIn = 0;
+        wasHigh = false;
+        wireId = staticId++;
     }
 
     public int hashCode() {

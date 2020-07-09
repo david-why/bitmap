@@ -181,7 +181,7 @@ public class SemiconductorBlock extends Block {
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
                     if (!allNodes.contains(b2i(t))) {
                         allNodes.add(b2i(t));
-                        if (allNodes.size() % 10000 == 0) {
+                        if (allNodes.size() % 20000 == 0) {
                             player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()));
                         }
                         if (tstate.get(ON) > 0) {
