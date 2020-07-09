@@ -200,31 +200,21 @@ public class SemiconductorMachine {
             pendingWires.remove(0);
         }
 
-        Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
-        Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
-        wires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
-                highWires.add(wire);
-            } else {
-                lowWires.add(wire);
-            }
-        });
+        Set<SemiconductorWire> highNotifyWires = new HashSet<SemiconductorWire>();
+        Set<SemiconductorWire> lowNotifyWires = new HashSet<SemiconductorWire>();
 
         activeWires.addAll(changedWires);
         while (times-- > 0) {
-            runOnce();
+            runOnce(highNotifyWires, lowNotifyWires);
         }
 
-        highWires.forEach((SemiconductorWire wire) -> {
-            if (!wire.isHigh()) {
-                wire.exportCoopNodes(lowNodes);
-            }
+        lowNotifyWires.forEach((SemiconductorWire wire) -> {
+            wire.exportCoopNodes(lowNodes);
         });
-        lowWires.forEach((SemiconductorWire wire) -> {
-            if (wire.isHigh()) {
-                wire.exportCoopNodes(highNodes);
-            }
+        highNotifyWires.forEach((SemiconductorWire wire) -> {
+            wire.exportCoopNodes(highNodes);
         });
+        /*
         changedWires.forEach((SemiconductorWire wire) -> {
             if (wire.isHigh()) {
                 wire.exportCoopNodes(highNodes);
@@ -232,18 +222,25 @@ public class SemiconductorMachine {
                 wire.exportCoopNodes(lowNodes);
             }
         });
+        */
         changedWires.clear();
     }
 
-    private void runOnce() {
+    private void runOnce(Set<SemiconductorWire> highNotifyWires, Set<SemiconductorWire> lowNotifyWires) {
         Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
         Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
         activeWires.forEach((SemiconductorWire wire) -> {
             if (wire.goHigh()) {
                 highWires.add(wire);
+                if (highNotifyWires.add(wire)) {
+                    lowNotifyWires.remove(wire);
+                }
             }
             if (wire.goLow()) {
                 lowWires.add(wire);
+                if (lowNotifyWires.add(wire)) {
+                    highNotifyWires.remove(wire);
+                }
             }
         });
         activeWires.clear();
