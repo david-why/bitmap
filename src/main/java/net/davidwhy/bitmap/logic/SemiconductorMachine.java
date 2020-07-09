@@ -150,7 +150,7 @@ public class SemiconductorMachine {
         });
     }
 
-    public Boolean setCoop(Long pos) {
+    public boolean setCoop(Long pos) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return false;
@@ -166,7 +166,7 @@ public class SemiconductorMachine {
         wire.unsetCoop(pos);
     }
 
-    public void power(Long pos, Boolean powered) {
+    public void power(Long pos, boolean powered) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -197,8 +197,8 @@ public class SemiconductorMachine {
 
         Set<SemiconductorWire> highNotifyWires = new HashSet<SemiconductorWire>();
         Set<SemiconductorWire> lowNotifyWires = new HashSet<SemiconductorWire>();
-        Set<SemiconductorWire> highWires = new HashSet<SemiconductorWire>();
-        Set<SemiconductorWire> lowWires = new HashSet<SemiconductorWire>();
+        List<SemiconductorWire> highWires = new ArrayList<SemiconductorWire>();
+        List<SemiconductorWire> lowWires = new ArrayList<SemiconductorWire>();
 
         while (times-- > 0) {
             highWires.clear();
@@ -206,14 +206,18 @@ public class SemiconductorMachine {
             activeWires.forEach((SemiconductorWire wire) -> {
                 if (wire.goHigh()) {
                     highWires.add(wire);
-                    if (highNotifyWires.add(wire)) {
-                        lowNotifyWires.remove(wire);
+                    if (wire.haveCoopNodes()) {
+                        if (highNotifyWires.add(wire)) {
+                            lowNotifyWires.remove(wire);
+                        }
                     }
                 }
                 if (wire.goLow()) {
                     lowWires.add(wire);
-                    if (lowNotifyWires.add(wire)) {
-                        highNotifyWires.remove(wire);
+                    if (wire.haveCoopNodes()) {
+                        if (lowNotifyWires.add(wire)) {
+                            highNotifyWires.remove(wire);
+                        }
                     }
                 }
             });

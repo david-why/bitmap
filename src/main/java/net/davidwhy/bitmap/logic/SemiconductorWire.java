@@ -11,7 +11,7 @@ public class SemiconductorWire {
     private Set<Long> poweredNodes;
     private int poweredCommands;
     private int currentIn;
-    private Boolean wasHigh;
+    private boolean wasHigh;
 
     private static long staticId = 0;
     private long wireId;
@@ -46,8 +46,8 @@ public class SemiconductorWire {
         poweredCommands--;
     }
 
-    public Boolean power(Long pos, Boolean powered) {
-        Boolean wasHigh = isHigh();
+    public boolean power(Long pos, boolean powered) {
+        boolean wasHigh = isHigh();
         if (powered) {
             poweredNodes.add(pos);
         } else {
@@ -56,11 +56,11 @@ public class SemiconductorWire {
         return wasHigh != isHigh();
     }
 
-    public Boolean isHigh() {
+    public boolean isHigh() {
         return currentIn > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
     }
 
-    public Boolean setCoop(Long pos) {
+    public boolean setCoop(Long pos) {
         coopNodes.add(pos);
         return isHigh();
     }
@@ -69,12 +69,16 @@ public class SemiconductorWire {
         coopNodes.remove(pos);
     }
 
+    public boolean haveCoopNodes() {
+        return !coopNodes.isEmpty();
+    }
+
     public void enable(SemiconductorWire wire) {
         enableOthers.add(wire);
         wire.currentIn++;
     }
 
-    public Boolean goHigh() {
+    public boolean goHigh() {
         if (wasHigh || !isHigh()) {
             return false;
         }
@@ -82,7 +86,7 @@ public class SemiconductorWire {
         return true;
     }
 
-    public Boolean goLow() {
+    public boolean goLow() {
         if (!wasHigh || isHigh()) {
             return false;
         }

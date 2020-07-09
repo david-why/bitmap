@@ -55,11 +55,11 @@ public class Semiconductor {
         return coopNodes;
     }
 
-    public static Boolean inMachine(Long pos) {
+    public static boolean inMachine(Long pos) {
         return nodes.containsKey(pos);
     }
 
-    public static Boolean setCoopBlock(Long pos) {
+    public static boolean setCoopBlock(Long pos) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return false;
@@ -75,7 +75,7 @@ public class Semiconductor {
         machine.unsetCoop(pos);
     }
 
-    public static void powerBlock(Long pos, Boolean powered) {
+    public static void powerBlock(Long pos, boolean powered) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return;
@@ -92,7 +92,7 @@ public class Semiconductor {
     }
 
     private static long absTick = 0;
-    private static int tickPerSecond = 20;
+    private static int tickPerSecond = 10;
 
     public static void tick(Set<Long> lowNodes, Set<Long> highNodes) {
         absTick++;

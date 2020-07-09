@@ -16,8 +16,14 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
         ServerTickEvents.START_WORLD_TICK.register(this);
     }
 
+    private int tickCount = 0;
+
     public void onStartTick(ServerWorld world) {
         if (world.dimension.getType() != DimensionType.OVERWORLD) {
+            return;
+        }
+
+        if (tickCount++ % 2 == 1) {
             return;
         }
 
