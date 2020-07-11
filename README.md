@@ -11,7 +11,7 @@ A few:
 3. Use your IDE to open the folder.
 4. Starting coding / playing! :grinning:
 ## How to build
-1. Run ./gradlew build (or .\gradlew on Windows). 
+1. Run ./gradlew build (or .\gradlew.bat on Windows). 
 2. There should be many JAR files in build/libs now. 
 3. Find the one called [MC1.14.4]Bitmap-Simulator-[version].jar and copy it to your .minecraft/mods folder.
 4. Done!
