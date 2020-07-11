@@ -15,7 +15,7 @@ public class BitMapComputer {
         if (dataPos >= 0) {
             int i = data.indexOf(',', dataPos);
             if (i < 0) {
-                dataPos = -1;
+                dataPos = -9999;
             } else {
                 int j = Integer.parseInt(BitMapComputer.data.substring(dataPos, i));
                 dataPos = i + 1;
