@@ -13,14 +13,14 @@ import net.minecraft.util.registry.Registry;
 public class BitMapMod implements ModInitializer {
 
         public static final String MODID = "bitmap";
-        public static final Block BLACK_BLOCK = new SemiconductorBlock(12);
-        public static final Block RED_BLOCK = new SemiconductorBlock(12);
-        public static final Block YELLOW_BLOCK = new SemiconductorBlock(12);
-        public static final Block GREEN_BLOCK = new SemiconductorBlock(12);
-        public static final Block CYAN_BLOCK = new SemiconductorBlock(12);
-        public static final Block BLUE_BLOCK = new SemiconductorBlock(12);
-        public static final Block PINK_BLOCK = new SemiconductorBlock(12);
-        public static final Block WHITE_BLOCK = new SemiconductorBlock(12);
+        public static final Block BLACK_BLOCK = new SemiconductorBlock();
+        public static final Block RED_BLOCK = new SemiconductorBlock();
+        public static final Block YELLOW_BLOCK = new SemiconductorBlock();
+        public static final Block GREEN_BLOCK = new SemiconductorBlock();
+        public static final Block CYAN_BLOCK = new SemiconductorBlock();
+        public static final Block BLUE_BLOCK = new SemiconductorBlock();
+        public static final Block PINK_BLOCK = new SemiconductorBlock();
+        public static final Block WHITE_BLOCK = new SemiconductorBlock();
         public static final BitMapTick TICK = new BitMapTick();
 
         @Override

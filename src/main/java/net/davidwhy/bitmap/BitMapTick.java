@@ -19,7 +19,7 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
     private int tickCount = 0;
 
     public void onStartTick(ServerWorld world) {
-        if (world.dimension.getType() != DimensionType.OVERWORLD) {
+        if (world.getDimension() != DimensionType.getOverworldDimensionType()) {
             return;
         }
 

@@ -28,14 +28,14 @@ public class SemiconductorBlock extends Block {
 
     public static final IntProperty ON;
 
-    public SemiconductorBlock(int luminance) {
-        super(FabricBlockSettings.copyOf(Blocks.STONE).lightLevel(luminance));
+    public SemiconductorBlock() {
+        super(FabricBlockSettings.copyOf(Blocks.STONE));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
-        if (world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator()) {
+        if (world.getDimension() != DimensionType.getOverworldDimensionType() || player.isSpectator()) {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
@@ -60,7 +60,7 @@ public class SemiconductorBlock extends Block {
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
-            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()));
+            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
@@ -68,7 +68,7 @@ public class SemiconductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD || player.isSpectator()) {
+        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType() || player.isSpectator()) {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
@@ -84,7 +84,7 @@ public class SemiconductorBlock extends Block {
             Semiconductor.powerBlock(b2i(pos));
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
-            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()));
+            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
@@ -95,7 +95,7 @@ public class SemiconductorBlock extends Block {
     }
 
     public int getLuminance(BlockState state) {
-        return (Integer) state.get(ON) == 2 ? super.getLuminance(state) : 0;
+        return (Integer) state.get(ON) == 2 ? 12 : 0;
     }
 
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
@@ -104,7 +104,7 @@ public class SemiconductorBlock extends Block {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
             boolean moved) {
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD) {
+        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()) {
             return;
         }
         if (block instanceof SemiconductorBlock) {
@@ -124,7 +124,7 @@ public class SemiconductorBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD
+        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
                 || oldState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
@@ -132,10 +132,10 @@ public class SemiconductorBlock extends Block {
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onBlockRemoved(state, world, pos, newState, moved);
-        if (world.isClient || world.dimension.getType() != DimensionType.OVERWORLD
-                || newState.getBlock() instanceof SemiconductorBlock) {
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
+                || state.getBlock() instanceof SemiconductorBlock) {
             return;
         }
         releaseMachine(world, pos);
@@ -182,7 +182,7 @@ public class SemiconductorBlock extends Block {
                     if (!allNodes.contains(b2i(t))) {
                         allNodes.add(b2i(t));
                         if (allNodes.size() % 20000 == 0) {
-                            player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()));
+                            player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()), true);
                         }
                         if (tstate.get(ON) > 0) {
                             coopNodes.add(b2i(t));
@@ -211,7 +211,7 @@ public class SemiconductorBlock extends Block {
 
         int retc = Semiconductor.createMachine(allNodes, coopNodes, poweredNodes);
         if (retc > 0) {
-            player.sendMessage(new TranslatableText("message.bitmap.create", retc));
+            player.sendMessage(new TranslatableText("message.bitmap.create", retc), true);
         }
     }
 

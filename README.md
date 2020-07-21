@@ -2,7 +2,7 @@
 A Minecraft mod that adds a single block. It can be used as the "wire" in BitMap logic simulator.
 ## Dependencies
 A few:
-* Minecraft 1.14.4
+* Minecraft 1.14 or above
 * Fabric
 * Fabric API
 ## How to use from source
@@ -13,5 +13,5 @@ A few:
 ## How to build
 1. Run ./gradlew build (or .\gradlew.bat on Windows). 
 2. There should be many JAR files in build/libs now. 
-3. Find the one called [MC1.14.4]Bitmap-Simulator-[version].jar and copy it to your .minecraft/mods folder.
+3. Find the one called [MCversion]Bitmap-Simulator-[version].jar and copy it to your .minecraft/mods folder.
 4. Done!

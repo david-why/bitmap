@@ -10,13 +10,14 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+// Fabric Latest Versions : https://modmuss50.me/fabric.html
 dependencies {
-    minecraft "com.mojang:minecraft:1.14.4"
-    mappings "net.fabricmc:yarn:1.14.4+build.18:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.8.8+build.202"
+    minecraft "com.mojang:minecraft:1.16.1"
+    mappings "net.fabricmc:yarn:1.16.1+build.21:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.9.0+build.204"
             
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.14.0+build.258-1.14"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.15.1+build.380-1.16.1"
 }
 
 processResources {
