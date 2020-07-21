@@ -94,10 +94,6 @@ public class SemiconductorBlock extends Block {
         builder.add(ON);
     }
 
-    public int getLuminance(BlockState state) {
-        return (Integer) state.get(ON) == 2 ? 12 : 0;
-    }
-
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
         return (Integer) state.get(ON) == 2 ? 8 : 0;
     }
@@ -132,10 +128,10 @@ public class SemiconductorBlock extends Block {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
         if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
-                || state.getBlock() instanceof SemiconductorBlock) {
+                || newState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
         releaseMachine(world, pos);
