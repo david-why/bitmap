@@ -46,14 +46,12 @@ public class SemiconductorWire {
         poweredCommands--;
     }
 
-    public boolean power(Long pos, boolean powered) {
-        boolean wasHigh = isHigh();
+    public void power(Long pos, boolean powered) {
         if (powered) {
             poweredNodes.add(pos);
         } else {
             poweredNodes.remove(pos);
         }
-        return wasHigh != isHigh();
     }
 
     public boolean isHigh() {

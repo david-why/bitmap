@@ -119,11 +119,9 @@ public class SemiconductorMachine {
         });
 
         enableLongs.forEach((Long a, Set<Long> enables) -> {
-            Long p = masterLongs.get(a);
-            SemiconductorWire wire = nodes.get(p);
+            SemiconductorWire wire = nodes.get(masterLongs.get(a));
             enables.forEach((Long c) -> {
-                Long q = masterLongs.get(c);
-                SemiconductorWire other = nodes.get(q);
+                SemiconductorWire other = nodes.get(masterLongs.get(c));
                 wire.enable(other);
             });
         });
@@ -141,12 +139,8 @@ public class SemiconductorMachine {
 
     public void release(Set<Long> allNodes, Set<Long> coopNodes) {
         wires.forEach((SemiconductorWire wire) -> {
-            if (allNodes != null) {
-                wire.exportAllNodes(allNodes);
-            }
-            if (coopNodes != null) {
-                wire.exportCoopNodes(coopNodes);
-            }
+            wire.exportAllNodes(allNodes);
+            wire.exportCoopNodes(coopNodes);
         });
     }
 
@@ -201,8 +195,6 @@ public class SemiconductorMachine {
         List<SemiconductorWire> lowWires = new ArrayList<SemiconductorWire>();
 
         while (times-- > 0) {
-            highWires.clear();
-            lowWires.clear();
             activeWires.forEach((SemiconductorWire wire) -> {
                 if (wire.goHigh()) {
                     highWires.add(wire);
@@ -222,12 +214,16 @@ public class SemiconductorMachine {
                 }
             });
             activeWires.clear();
+
             highWires.forEach((SemiconductorWire wire) -> {
                 wire.highOut(activeWires);
             });
+            highWires.clear();
+
             lowWires.forEach((SemiconductorWire wire) -> {
                 wire.lowOut(activeWires);
             });
+            lowWires.clear();
         }
 
         lowNotifyWires.forEach((SemiconductorWire wire) -> {
