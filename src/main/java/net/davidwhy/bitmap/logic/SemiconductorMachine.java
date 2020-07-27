@@ -144,7 +144,7 @@ public class SemiconductorMachine {
         });
     }
 
-    public boolean setCoop(Long pos) {
+    public boolean setCoop(long pos) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return false;
@@ -152,7 +152,7 @@ public class SemiconductorMachine {
         return wire.setCoop(pos);
     }
 
-    public void unsetCoop(Long pos) {
+    public void unsetCoop(long pos) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -160,7 +160,7 @@ public class SemiconductorMachine {
         wire.unsetCoop(pos);
     }
 
-    public void power(Long pos, boolean powered) {
+    public void power(long pos, boolean powered) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;
@@ -169,7 +169,7 @@ public class SemiconductorMachine {
         activeWires.add(wire);
     }
 
-    public void power(Long pos, long absTick) {
+    public void power(long pos, long absTick) {
         SemiconductorWire wire = nodes.get(pos);
         if (wire == null) {
             return;

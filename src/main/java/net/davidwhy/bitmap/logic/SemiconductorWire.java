@@ -46,7 +46,7 @@ public class SemiconductorWire {
         poweredCommands--;
     }
 
-    public void power(Long pos, boolean powered) {
+    public void power(long pos, boolean powered) {
         if (powered) {
             poweredNodes.add(pos);
         } else {
@@ -58,12 +58,12 @@ public class SemiconductorWire {
         return currentIn > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
     }
 
-    public boolean setCoop(Long pos) {
+    public boolean setCoop(long pos) {
         coopNodes.add(pos);
         return isHigh();
     }
 
-    public void unsetCoop(Long pos) {
+    public void unsetCoop(long pos) {
         coopNodes.remove(pos);
     }
 
