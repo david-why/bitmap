@@ -2,12 +2,12 @@ package net.davidwhy.bitmap;
 
 import java.util.HashSet;
 import java.util.Set;
-import net.davidwhy.bitmap.logic.Semiconductor;
-import net.minecraft.block.BlockState;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
+import net.davidwhy.bitmap.logic.Semiconductor;
 
 public class BitMapTick implements ServerTickEvents.StartWorldTick {
 
