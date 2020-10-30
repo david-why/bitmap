@@ -1,6 +1,5 @@
 package net.davidwhy.bitmap;
 
-import net.davidwhy.bitmap.block.SemiconductorBlock;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;

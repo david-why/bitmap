@@ -3,7 +3,6 @@ package net.davidwhy.bitmap;
 import java.util.HashSet;
 import java.util.Set;
 import net.davidwhy.bitmap.logic.Semiconductor;
-import net.davidwhy.bitmap.block.SemiconductorBlock;
 import net.minecraft.block.BlockState;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.world.ServerWorld;
