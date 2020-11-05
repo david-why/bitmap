@@ -48,14 +48,20 @@ public class SemiconductorWire {
 
     public void power(long pos, boolean powered) {
         if (powered) {
-            poweredNodes.add(pos);
+            if (!poweredNodes.contains(pos)) {
+                poweredNodes.add(pos);
+                poweredCommands++;
+            }
         } else {
-            poweredNodes.remove(pos);
+            if (poweredNodes.contains(pos)) {
+                poweredNodes.remove(pos);
+                poweredCommands--;
+            }
         }
     }
 
     public boolean isHigh() {
-        return currentIn > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
+        return currentIn > 0 || poweredCommands > 0;
     }
 
     public boolean setCoop(long pos) {
