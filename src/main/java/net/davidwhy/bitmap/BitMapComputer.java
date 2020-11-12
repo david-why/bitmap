@@ -25,12 +25,13 @@ public class BitMapComputer {
         return -9999;
     }
 
-    public static void genComputer(ServerWorld world) {
-        /*
+    public static void startGen() {
         if (dataPos == -1) {
             dataPos = 0;
         }
-        */
+    }
+
+    public static void genComputer(ServerWorld world) {
         for (int a = 0; a < 100; a++) {
             int x = fetchData();
             int z = fetchData();

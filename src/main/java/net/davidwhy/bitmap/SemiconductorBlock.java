@@ -86,6 +86,12 @@ public class SemiconductorBlock extends Block {
         } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
             return ActionResult.SUCCESS;
+        } else if (itemInHand == Items.WOODEN_SWORD) {
+            if (pos.getX() == 0 && pos.getZ() == 0) {
+                player.sendMessage(new TranslatableText("message.bitmap.startgen"), true);
+                BitMapComputer.startGen();
+                return ActionResult.SUCCESS;
+            }
         }
         return ActionResult.PASS;
     }
