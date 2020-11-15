@@ -10,8 +10,8 @@ public class Semiconductor {
     private static int speed = 10;
 
     public static int speedUp() {
-        if (speed == 2) {
-            speed = 5;
+        if (speed == 2 || speed == 20 || speed == 200 || speed == 2000 || speed == 20000 || speed == 200000 || speed == 2000000) {
+            speed = speed / 2 * 5;
         } else if (speed < 1000000) {
             speed *= 2;
         }
@@ -19,7 +19,9 @@ public class Semiconductor {
     }
 
     public static int speedDown() {
-        if (speed > 1) {
+        if (speed == 5000000 || speed == 500000 || speed == 50000 || speed == 5000 || speed == 500 || speed == 50 || speed == 5) {
+            speed = speed / 5 * 2;
+        } else if (speed > 1) {
             speed /= 2;
         }
         return speed;
