@@ -88,7 +88,7 @@ public class SemiconductorBlock extends Block {
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
             if (pos.getX() == 0 && pos.getZ() == 0) {
-                player.sendMessage(new TranslatableText("message.bitmap.startgen"), true);
+                player.sendMessage(new TranslatableText("message.bitmap.start_gen"), true);
                 BitMapComputer.startGen();
                 return ActionResult.SUCCESS;
             }
