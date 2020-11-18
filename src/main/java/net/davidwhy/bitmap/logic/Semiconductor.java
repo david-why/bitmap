@@ -1,5 +1,6 @@
 package net.davidwhy.bitmap.logic;
 
+import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.HashSet;
 
 public class Semiconductor {
 
-    private static int speed = 10;
+    public static int speed = 10;
 
     public static int speedUp() {
         if (speed == 2) {
@@ -25,8 +26,8 @@ public class Semiconductor {
         return speed;
     }
 
-    private static Map<Long, SemiconductorMachine> nodes = new HashMap<Long, SemiconductorMachine>();
-    private static Set<SemiconductorMachine> machines = new HashSet<SemiconductorMachine>();
+    public static Map<Long, SemiconductorMachine> nodes = new HashMap<Long, SemiconductorMachine>();
+    public static Set<SemiconductorMachine> machines = new HashSet<SemiconductorMachine>();
 
     public static int createMachine(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
         allNodes.forEach((Long pos) -> {
@@ -103,5 +104,15 @@ public class Semiconductor {
         machines.forEach((SemiconductorMachine machine) -> {
             machine.run(absTick, speed < tickPerSecond ? 1 : speed / tickPerSecond, lowNodes, highNodes);
         });
+    }
+
+    public static void writeObject(ObjectOutputStream stream)
+            throws IOException {
+        stream.writeInt(speed);
+    }
+
+    public static void readObject(ObjectInputStream stream)
+            throws IOException {
+        speed = stream.readInt();
     }
 }

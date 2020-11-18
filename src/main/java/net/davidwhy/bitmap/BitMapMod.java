@@ -1,6 +1,7 @@
 package net.davidwhy.bitmap;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -21,6 +22,7 @@ public class BitMapMod implements ModInitializer {
         public static final Block PINK_BLOCK = new SemiconductorBlock();
         public static final Block WHITE_BLOCK = new SemiconductorBlock();
         public static final BitMapTick TICK = new BitMapTick();
+        private BitMapSave saver;
 
         @Override
         public void onInitialize() {
@@ -49,6 +51,9 @@ public class BitMapMod implements ModInitializer {
                                 new BlockItem(PINK_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
                 Registry.register(Registry.ITEM, new Identifier(MODID, "white_semiconductor_block"),
                                 new BlockItem(WHITE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
+
+                ServerLifecycleEvents.SERVER_STARTED.register((server) -> saver = new BitMapSave(server));
+                ServerLifecycleEvents.SERVER_STOPPED.register((server) -> saver.stop());
         }
 
 }
