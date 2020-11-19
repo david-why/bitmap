@@ -112,7 +112,7 @@ public class SemiconductorMachine {
                     coopWireNodes.add(b);
                 }
             }
-            SemiconductorWire wire = new SemiconductorWire(allWireNodes, coopWireNodes);
+            SemiconductorWire wire = new SemiconductorWire(this, allWireNodes, coopWireNodes);
             wires.add(wire);
             for (Long b : slaves) {
                 nodes.put(b, wire);
@@ -247,11 +247,19 @@ public class SemiconductorMachine {
         }
     }
 
+    public SemiconductorWire getWire(Long pos) {
+        return nodes.get(pos);
+    }
+
     public void writeObject(PrintWriter out) throws IOException {
         out.println(machineId);
         out.println(wires.size());
         for (SemiconductorWire wire : wires) {
             wire.writeObject(out);
+        }
+        out.println(pendingWires.size());
+        for (SemiconductorWire wire : pendingWires) {
+            out.println(wire.getNode());
         }
     }
 
@@ -261,7 +269,7 @@ public class SemiconductorMachine {
             staticId = machineId + 1;
         }
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
-            SemiconductorWire wire = new SemiconductorWire(new HashSet<Long>(), new HashSet<Long>());
+            SemiconductorWire wire = new SemiconductorWire(this, new HashSet<Long>(), new HashSet<Long>());
             wire.readObject(in);
             wires.add(wire);
             activeWires.add(wire);
@@ -272,10 +280,11 @@ public class SemiconductorMachine {
             }
         }
         for (SemiconductorWire wire : wires) {
-            for (Long pos : wire.enableOtherNodes) {
-                wire.enableOthers.add(nodes.get(pos));
-            }
-            wire.enableOtherNodes.clear();
+            wire.enableAgain();
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            pendingTicks.add(0L);
+            pendingWires.add(getWire(Long.parseLong(in.readLine())));
         }
     }
 }

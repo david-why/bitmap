@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 public class SemiconductorWire {
 
+    private SemiconductorMachine machine;
     private Set<Long> allNodes;
     private Set<Long> coopNodes;
     private Set<Long> poweredNodes;
@@ -16,10 +17,11 @@ public class SemiconductorWire {
     private static long staticId = 0;
     private long wireId;
 
-    public Set<SemiconductorWire> enableOthers;
-    public Set<Long> enableOtherNodes;
+    private Set<SemiconductorWire> enableOthers;
+    private Set<Long> enableOtherNodes;
 
-    public SemiconductorWire(Set<Long> allNodes, Set<Long> coopNodes) {
+    public SemiconductorWire(SemiconductorMachine m, Set<Long> allNodes, Set<Long> coopNodes) {
+        machine = m;
         this.allNodes = allNodes;
         this.coopNodes = coopNodes;
         enableOthers = new HashSet<SemiconductorWire>();
@@ -88,6 +90,13 @@ public class SemiconductorWire {
         }
     }
 
+    public void enableAgain() {
+        for (Long pos : enableOtherNodes) {
+            enableOthers.add(machine.getWire(pos));
+        }
+        enableOtherNodes.clear();
+    }
+
     public boolean goHigh() {
         if (wasHigh || !isHigh()) {
             return false;
@@ -118,6 +127,13 @@ public class SemiconductorWire {
                 activeWires.add(other);
             }
         }
+    }
+
+    public Long getNode() {
+        for (Long pos : allNodes) {
+            return pos;
+        }
+        return 0L;
     }
 
     public void exportAllNodes(Set<Long> nodes) {
@@ -151,7 +167,7 @@ public class SemiconductorWire {
         }
         out.println(poweredCommands);
         out.println(currentIn);
-        out.println(wasHigh ? 9999 : 0);
+        out.println(wasHigh ? "High" : "Low");
     }
 
     public void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
@@ -173,6 +189,6 @@ public class SemiconductorWire {
         }
         poweredCommands = Integer.parseInt(in.readLine());
         currentIn = Integer.parseInt(in.readLine());
-        wasHigh = (Integer.parseInt(in.readLine()) > 0);
+        wasHigh = in.readLine().equals("High");
     }
 }
