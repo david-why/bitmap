@@ -155,7 +155,7 @@ public class SemiconductorBlock extends Block {
                     BlockPos u = pos.add(x, y, z);
                     Set<Long> allNodes = new HashSet<Long>();
                     Set<Long> coopNodes = new HashSet<Long>();
-                    if (Semiconductor.releaseMachine(b2i(u), allNodes, coopNodes)) {
+                    if (Semiconductor.releaseMachine(b2i(u), allNodes, coopNodes) > 0) {
                         for (Long a : allNodes) {
                             BlockPos t = i2b(a);
                             BlockState state = world.getBlockState(t);

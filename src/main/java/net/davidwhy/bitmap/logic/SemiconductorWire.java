@@ -137,11 +137,15 @@ public class SemiconductorWire {
     }
 
     public void exportAllNodes(Set<Long> nodes) {
-        nodes.addAll(allNodes);
+        if (nodes) {
+            nodes.addAll(allNodes);
+        }
     }
 
     public void exportCoopNodes(Set<Long> nodes) {
-        nodes.addAll(coopNodes);
+        if (nodes) {
+            nodes.addAll(coopNodes);
+        }
     }
 
     public void writeObject(PrintWriter out) throws IOException {

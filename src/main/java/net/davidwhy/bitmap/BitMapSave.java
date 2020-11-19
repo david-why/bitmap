@@ -22,6 +22,7 @@ public class BitMapSave {
             logger.info("bitmap.save loaded.");
         } catch (Exception e) {
             logger.warn("bitmap.save load failed.");
+            Semiconductor.clear();
         }
     }
 

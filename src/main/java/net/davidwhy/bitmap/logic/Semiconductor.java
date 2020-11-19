@@ -33,11 +33,15 @@ public class Semiconductor {
     private static Map<Long, SemiconductorMachine> nodes = new HashMap<Long, SemiconductorMachine>();
     private static Set<SemiconductorMachine> machines = new HashSet<SemiconductorMachine>();
 
+    public static void clear() {
+        speed = 10;
+        nodes.clear();
+        machines.clear();
+    }
+
     public static int createMachine(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
         for (Long pos : allNodes) {
-            Set<Long> a = new HashSet<Long>();
-            Set<Long> c = new HashSet<Long>();
-            releaseMachine(pos, a, c);
+            releaseMachine(pos, null, null);
         }
         SemiconductorMachine machine = new SemiconductorMachine();
         for (Long pos : allNodes) {
@@ -47,17 +51,20 @@ public class Semiconductor {
         return machine.create(allNodes, coopNodes, poweredNodes);
     }
 
-    public static boolean releaseMachine(Long pos, Set<Long> allNodes, Set<Long> coopNodes) {
+    public static int releaseMachine(Long pos, Set<Long> allNodes, Set<Long> coopNodes) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
-            return false;
+            return 0;
         }
         machines.remove(machine);
         machine.release(allNodes, coopNodes);
+        if (allNodes == null) {
+            return -1;
+        }
         for (Long a : allNodes) {
             nodes.remove(a);
         }
-        return true;
+        return allNodes.size();
     }
 
     public static boolean inMachine(long pos) {
