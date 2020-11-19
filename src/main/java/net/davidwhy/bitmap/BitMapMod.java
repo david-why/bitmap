@@ -53,7 +53,7 @@ public class BitMapMod implements ModInitializer {
                                 new BlockItem(WHITE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
 
                 ServerLifecycleEvents.SERVER_STARTED.register((server) -> saver = new BitMapSave(server));
-                ServerLifecycleEvents.SERVER_STOPPED.register((server) -> saver.stop());
+                ServerLifecycleEvents.SERVER_STOPPED.register((server) -> saver.save());
         }
 
 }

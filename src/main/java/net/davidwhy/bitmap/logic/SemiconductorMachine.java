@@ -1,5 +1,6 @@
 package net.davidwhy.bitmap.logic;
 
+import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -47,9 +48,9 @@ public class SemiconductorMachine {
         long other = masterLongs.get(b);
         if (master != other) {
             Set<Long> slaveOthers = slaveLongs.get(other);
-            slaveOthers.forEach((Long c) -> {
+            for (Long c: slaveOthers) {
                 masterLongs.put(c, master);
-            });
+            }
             Set<Long> slaves = slaveLongs.get(master);
             slaves.addAll(slaveOthers);
             slaveLongs.remove(other);
@@ -60,13 +61,13 @@ public class SemiconductorMachine {
         Map<Long, Long> masterLongs = new HashMap<Long, Long>();
         Map<Long, Set<Long>> slaveLongs = new HashMap<Long, Set<Long>>();
         Map<Long, Set<Long>> enableLongs = new HashMap<Long, Set<Long>>();
-        allNodes.forEach((Long a) -> {
+        for (Long a: allNodes) {
             masterLongs.put(a, a);
             Set<Long> slaves = new HashSet<Long>();
             slaves.add(a);
             slaveLongs.put(a, slaves);
-        });
-        allNodes.forEach((Long a) -> {
+        }
+        for (Long a: allNodes) {
             for (int i = 0; i < dirs.length; i++) {
                 long b = a + dirs[i][0];
                 if (allNodes.contains(b)) {
@@ -100,48 +101,48 @@ public class SemiconductorMachine {
                     }
                 }
             }
-        });
+        }
 
         slaveLongs.forEach((Long a, Set<Long> slaves) -> {
             Set<Long> allWireNodes = new HashSet<Long>();
             Set<Long> coopWireNodes = new HashSet<Long>();
-            slaves.forEach((Long b) -> {
+            for (Long b: slaves) {
                 allWireNodes.add(b);
                 if (coopNodes.contains(b)) {
                     coopWireNodes.add(b);
                 }
-            });
+            }
             SemiconductorWire wire = new SemiconductorWire(allWireNodes, coopWireNodes);
             wires.add(wire);
-            slaves.forEach((Long b) -> {
+            for (Long b: slaves) {
                 nodes.put(b, wire);
-            });
+            }
         });
 
         enableLongs.forEach((Long a, Set<Long> enables) -> {
             SemiconductorWire wire = nodes.get(masterLongs.get(a));
-            enables.forEach((Long c) -> {
+            for (Long c: enables) {
                 SemiconductorWire other = nodes.get(masterLongs.get(c));
                 wire.enable(other);
-            });
+            }
         });
 
-        poweredNodes.forEach((Long a) -> {
+        for (Long a: poweredNodes) {
             SemiconductorWire wire = nodes.get(a);
             if (wire != null) {
                 wire.power(a, true);
             }
-        });
+        }
 
         activeWires.addAll(wires);
         return allNodes.size();
     }
 
     public void release(Set<Long> allNodes, Set<Long> coopNodes) {
-        wires.forEach((SemiconductorWire wire) -> {
+        for (SemiconductorWire wire: wires) {
             wire.exportAllNodes(allNodes);
             wire.exportCoopNodes(coopNodes);
-        });
+        }
     }
 
     public boolean setCoop(long pos) {
@@ -195,7 +196,7 @@ public class SemiconductorMachine {
         List<SemiconductorWire> lowWires = new ArrayList<SemiconductorWire>();
 
         while (times-- > 0) {
-            activeWires.forEach((SemiconductorWire wire) -> {
+            for (SemiconductorWire wire: activeWires) {
                 if (wire.goHigh()) {
                     highWires.add(wire);
                     if (wire.haveCoopNodes()) {
@@ -212,25 +213,69 @@ public class SemiconductorMachine {
                         }
                     }
                 }
-            });
+            }
             activeWires.clear();
 
-            highWires.forEach((SemiconductorWire wire) -> {
+            for (SemiconductorWire wire: highWires) {
                 wire.highOut(activeWires);
-            });
+            }
             highWires.clear();
 
-            lowWires.forEach((SemiconductorWire wire) -> {
+            for (SemiconductorWire wire: lowWires) {
                 wire.lowOut(activeWires);
-            });
+            }
             lowWires.clear();
         }
 
-        lowNotifyWires.forEach((SemiconductorWire wire) -> {
+        for (SemiconductorWire wire: lowNotifyWires) {
             wire.exportCoopNodes(lowNodes);
-        });
-        highNotifyWires.forEach((SemiconductorWire wire) -> {
+        }
+        for (SemiconductorWire wire: highNotifyWires) {
             wire.exportCoopNodes(highNodes);
-        });
+        }
+    }
+
+    public void exportAllNodes(Set<Long> nodes) {
+        for (SemiconductorWire wire: wires) {
+            wire.exportAllNodes(nodes);
+        }
+    }
+
+    public void exportCoopNodes(Set<Long> nodes) {
+        for (SemiconductorWire wire: wires) {
+            wire.exportCoopNodes(nodes);   
+        }
+    }
+
+    public void writeObject(PrintWriter out) throws IOException {
+        out.println(machineId);
+        out.println(wires.size());
+        for (SemiconductorWire wire: wires) {
+            wire.writeObject(out);
+        }
+    }
+
+    public void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
+        machineId = Long.parseLong(in.readLine());
+        if (machineId >= staticId) {
+            staticId = machineId + 1;
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            SemiconductorWire wire = new SemiconductorWire(new HashSet<Long>(), new HashSet<Long>());
+            wire.readObject(in);
+            wires.add(wire);
+            activeWires.add(wire);
+            Set<Long> x = new HashSet<Long>();
+            wire.exportAllNodes(x);
+            for (Long pos: x) {
+                nodes.put(pos, wire);
+            }
+        }
+        for (SemiconductorWire wire: wires) {
+            for (Long pos: wire.enableOtherNodes) {
+                wire.enableOthers.add(nodes.get(pos));
+            }
+            wire.enableOtherNodes.clear();
+        }
     }
 }

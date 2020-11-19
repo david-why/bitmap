@@ -153,13 +153,13 @@ public class SemiconductorBlock extends Block {
                     BlockPos u = pos.add(x, y, z);
                     Set<Long> coopNodes = Semiconductor.releaseMachine(b2i(u));
                     if (coopNodes != null) {
-                        coopNodes.forEach((Long a) -> {
+                        for (Long a: coopNodes) {
                             BlockPos t = i2b(a);
                             BlockState state = world.getBlockState(t);
                             if (state.getBlock() instanceof SemiconductorBlock) {
                                 world.setBlockState(t, (BlockState) state.with(ON, 1), 3);
                             }
-                        });
+                        }
                     }
                 }
             }
@@ -178,7 +178,7 @@ public class SemiconductorBlock extends Block {
         tmpNodes.add(pos);
         while (tmpNodes.size() > 0) {
             Set<BlockPos> tmpNodes2 = new HashSet<BlockPos>();
-            tmpNodes.forEach((BlockPos t) -> {
+            for (BlockPos t: tmpNodes) {
                 BlockState tstate = world.getBlockState(t);
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
                     if (!allNodes.contains(b2i(t))) {
@@ -207,7 +207,7 @@ public class SemiconductorBlock extends Block {
                 } else {
                     badNodes.add(t);
                 }
-            });
+            }
             tmpNodes = tmpNodes2;
         }
 
