@@ -30,7 +30,7 @@ public class SemiconductorBlock extends Block {
 
     public SemiconductorBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE)
-                .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 2 ? 12 : 0)));
+                .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 3 ? 12 : 0)));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
@@ -52,11 +52,11 @@ public class SemiconductorBlock extends Block {
         if (itemInHand == Items.GOLDEN_SWORD) {
             int on = (Integer) state.get(ON);
             checkMachine(player, world, pos);
-            if (on == 0) {
-                on = Semiconductor.setCoopBlock(b2i(pos)) ? 2 : 1;
+            if (on < 2) {
+                on = Semiconductor.setCoopBlock(b2i(pos)) ? 3 : 2;
             } else {
                 Semiconductor.unsetCoopBlock(b2i(pos));
-                on = 0;
+                on = 1;
             }
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
@@ -80,7 +80,7 @@ public class SemiconductorBlock extends Block {
         }
         if (itemInHand == Items.GOLDEN_SWORD) {
             checkMachine(player, world, pos);
-            if ((Integer) state.get(ON) == 0) {
+            if ((Integer) state.get(ON) < 2) {
                 return ActionResult.PASS;
             }
             Semiconductor.powerBlock(b2i(pos));
@@ -103,7 +103,7 @@ public class SemiconductorBlock extends Block {
     }
 
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction facing) {
-        return (Integer) state.get(ON) == 2 ? 8 : 0;
+        return (Integer) state.get(ON) == 3 ? 8 : 0;
     }
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
@@ -116,13 +116,13 @@ public class SemiconductorBlock extends Block {
         }
         int powerLevel = world.getReceivedRedstonePower(pos);
         Semiconductor.powerBlock(b2i(pos), powerLevel > 8);
-        if (powerLevel > 8 && (Integer) state.get(ON) == 1) {
-            world.setBlockState(pos, (BlockState) state.with(ON, 2), 3);
+        if (powerLevel > 8 && (Integer) state.get(ON) == 2) {
+            world.setBlockState(pos, (BlockState) state.with(ON, 3), 3);
         }
     }
 
     public boolean emitsRedstonePower(BlockState state) {
-        return (Integer) state.get(ON) == 2;
+        return (Integer) state.get(ON) == 3;
     }
 
     @Override
@@ -153,13 +153,14 @@ public class SemiconductorBlock extends Block {
                         continue;
                     }
                     BlockPos u = pos.add(x, y, z);
-                    Set<Long> coopNodes = Semiconductor.releaseMachine(b2i(u));
-                    if (coopNodes != null) {
-                        for (Long a : coopNodes) {
+                    Set<Long> allNodes = new HashSet<Long>();
+                    Set<Long> coopNodes = new HashSet<Long>();
+                    if (Semiconductor.releaseMachine(b2i(u), allNodes, coopNodes)) {
+                        for (Long a : allNodes) {
                             BlockPos t = i2b(a);
                             BlockState state = world.getBlockState(t);
                             if (state.getBlock() instanceof SemiconductorBlock) {
-                                world.setBlockState(t, (BlockState) state.with(ON, 1), 3);
+                                world.setBlockState(t, (BlockState) state.with(ON, coopNodes.contains(a) ? 2 : 0), 3);
                             }
                         }
                     }
@@ -188,7 +189,7 @@ public class SemiconductorBlock extends Block {
                         if (allNodes.size() % 20000 == 0) {
                             player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()), true);
                         }
-                        if (tstate.get(ON) > 0) {
+                        if (tstate.get(ON) > 1) {
                             coopNodes.add(b2i(t));
                         }
                         if (world.getReceivedRedstonePower(t) > 8) {
@@ -215,6 +216,15 @@ public class SemiconductorBlock extends Block {
 
         int retc = Semiconductor.createMachine(allNodes, coopNodes, poweredNodes);
         if (retc > 0) {
+            for (Long a : allNodes) {
+                if (!coopNodes.contains(a)) {
+                    BlockPos t = i2b(a);
+                    BlockState state = world.getBlockState(t);
+                    if (state.getBlock() instanceof SemiconductorBlock) {
+                        world.setBlockState(t, (BlockState) state.with(ON, 1), 3);
+                    }
+                }
+            }
             player.sendMessage(new TranslatableText("message.bitmap.create", retc), true);
         }
     }
@@ -228,7 +238,7 @@ public class SemiconductorBlock extends Block {
     }
 
     static {
-        ON = IntProperty.of("on", 0, 2);
+        ON = IntProperty.of("on", 0, 3);
     }
 
 }
