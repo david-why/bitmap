@@ -9,7 +9,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-
 public class BitMapMod implements ModInitializer {
 
         public static final String MODID = "bitmap";
@@ -34,13 +33,13 @@ public class BitMapMod implements ModInitializer {
                 Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_semiconductor_block"), BLUE_BLOCK);
                 Registry.register(Registry.BLOCK, new Identifier(MODID, "pink_semiconductor_block"), PINK_BLOCK);
                 Registry.register(Registry.BLOCK, new Identifier(MODID, "white_semiconductor_block"), WHITE_BLOCK);
-                
-                Registry.register(Registry.ITEM, new Identifier(MODID, "black_semiconductor_block"), 
+
+                Registry.register(Registry.ITEM, new Identifier(MODID, "black_semiconductor_block"),
                                 new BlockItem(BLACK_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
                 Registry.register(Registry.ITEM, new Identifier(MODID, "red_semiconductor_block"),
                                 new BlockItem(RED_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_semiconductor_block"), 
-                                new BlockItem(YELLOW_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
+                Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_semiconductor_block"), new BlockItem(
+                                YELLOW_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
                 Registry.register(Registry.ITEM, new Identifier(MODID, "green_semiconductor_block"),
                                 new BlockItem(GREEN_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
                 Registry.register(Registry.ITEM, new Identifier(MODID, "cyan_semiconductor_block"),
@@ -57,4 +56,3 @@ public class BitMapMod implements ModInitializer {
         }
 
 }
-

@@ -34,11 +34,11 @@ public class Semiconductor {
     private static Set<SemiconductorMachine> machines = new HashSet<SemiconductorMachine>();
 
     public static int createMachine(Set<Long> allNodes, Set<Long> coopNodes, Set<Long> poweredNodes) {
-        for (Long pos: allNodes) {
+        for (Long pos : allNodes) {
             releaseMachine(pos);
         }
         SemiconductorMachine machine = new SemiconductorMachine();
-        for (Long pos: allNodes) {
+        for (Long pos : allNodes) {
             nodes.put(pos, machine);
         }
         machines.add(machine);
@@ -54,7 +54,7 @@ public class Semiconductor {
         Set<Long> allNodes = new HashSet<Long>();
         Set<Long> coopNodes = new HashSet<Long>();
         machine.release(allNodes, coopNodes);
-        for (Long a: allNodes) {
+        for (Long a : allNodes) {
             nodes.remove(a);
         }
         return coopNodes;
@@ -105,7 +105,7 @@ public class Semiconductor {
             return;
         }
 
-        for (SemiconductorMachine machine: machines) {
+        for (SemiconductorMachine machine : machines) {
             machine.run(absTick, speed < tickPerSecond ? 1 : speed / tickPerSecond, lowNodes, highNodes);
         }
     }
@@ -113,7 +113,7 @@ public class Semiconductor {
     public static void writeObject(PrintWriter out) throws IOException {
         out.println(speed);
         out.println(machines.size());
-        for (SemiconductorMachine machine: machines) {
+        for (SemiconductorMachine machine : machines) {
             machine.writeObject(out);
         }
     }
@@ -129,7 +129,7 @@ public class Semiconductor {
             machines.add(machine);
             Set<Long> x = new HashSet<Long>();
             machine.exportAllNodes(x);
-            for (Long pos: x) {
+            for (Long pos : x) {
                 nodes.put(pos, machine);
             }
         }

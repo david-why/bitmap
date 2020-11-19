@@ -11,7 +11,7 @@ import net.davidwhy.bitmap.logic.*;
 
 public class BitMapSave {
     private final Path configFile;
-    public static final String modid ="BitMap";
+    public static final String modid = "BitMap";
     private static final Logger logger = LogManager.getLogger(modid);
 
     public BitMapSave(MinecraftServer server) {

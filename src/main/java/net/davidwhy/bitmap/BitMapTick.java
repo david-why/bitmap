@@ -32,14 +32,14 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
         Set<Long> highNodes = new HashSet<Long>();
         Semiconductor.tick(lowNodes, highNodes);
 
-        for (Long a: lowNodes) {
+        for (Long a : lowNodes) {
             BlockPos pos = SemiconductorBlock.i2b(a);
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() instanceof SemiconductorBlock) {
                 world.setBlockState(pos, (BlockState) state.with(SemiconductorBlock.ON, 1), 3);
             }
         }
-        for (Long a: highNodes) {
+        for (Long a : highNodes) {
             BlockPos pos = SemiconductorBlock.i2b(a);
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() instanceof SemiconductorBlock) {

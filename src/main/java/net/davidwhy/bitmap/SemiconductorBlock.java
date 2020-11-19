@@ -29,7 +29,8 @@ public class SemiconductorBlock extends Block {
     public static final IntProperty ON;
 
     public SemiconductorBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE).lightLevel((BlockState state) -> ((Integer) state.get(ON) == 2 ? 12 : 0)));
+        super(FabricBlockSettings.copyOf(Blocks.STONE)
+                .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 2 ? 12 : 0)));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
@@ -68,7 +69,8 @@ public class SemiconductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType() || player.isSpectator()) {
+        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
+                || player.isSpectator()) {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
@@ -153,7 +155,7 @@ public class SemiconductorBlock extends Block {
                     BlockPos u = pos.add(x, y, z);
                     Set<Long> coopNodes = Semiconductor.releaseMachine(b2i(u));
                     if (coopNodes != null) {
-                        for (Long a: coopNodes) {
+                        for (Long a : coopNodes) {
                             BlockPos t = i2b(a);
                             BlockState state = world.getBlockState(t);
                             if (state.getBlock() instanceof SemiconductorBlock) {
@@ -178,7 +180,7 @@ public class SemiconductorBlock extends Block {
         tmpNodes.add(pos);
         while (tmpNodes.size() > 0) {
             Set<BlockPos> tmpNodes2 = new HashSet<BlockPos>();
-            for (BlockPos t: tmpNodes) {
+            for (BlockPos t : tmpNodes) {
                 BlockState tstate = world.getBlockState(t);
                 if (tstate.getBlock() instanceof SemiconductorBlock) {
                     if (!allNodes.contains(b2i(t))) {

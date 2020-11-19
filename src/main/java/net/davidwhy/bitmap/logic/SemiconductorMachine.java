@@ -48,7 +48,7 @@ public class SemiconductorMachine {
         long other = masterLongs.get(b);
         if (master != other) {
             Set<Long> slaveOthers = slaveLongs.get(other);
-            for (Long c: slaveOthers) {
+            for (Long c : slaveOthers) {
                 masterLongs.put(c, master);
             }
             Set<Long> slaves = slaveLongs.get(master);
@@ -61,13 +61,13 @@ public class SemiconductorMachine {
         Map<Long, Long> masterLongs = new HashMap<Long, Long>();
         Map<Long, Set<Long>> slaveLongs = new HashMap<Long, Set<Long>>();
         Map<Long, Set<Long>> enableLongs = new HashMap<Long, Set<Long>>();
-        for (Long a: allNodes) {
+        for (Long a : allNodes) {
             masterLongs.put(a, a);
             Set<Long> slaves = new HashSet<Long>();
             slaves.add(a);
             slaveLongs.put(a, slaves);
         }
-        for (Long a: allNodes) {
+        for (Long a : allNodes) {
             for (int i = 0; i < dirs.length; i++) {
                 long b = a + dirs[i][0];
                 if (allNodes.contains(b)) {
@@ -106,7 +106,7 @@ public class SemiconductorMachine {
         slaveLongs.forEach((Long a, Set<Long> slaves) -> {
             Set<Long> allWireNodes = new HashSet<Long>();
             Set<Long> coopWireNodes = new HashSet<Long>();
-            for (Long b: slaves) {
+            for (Long b : slaves) {
                 allWireNodes.add(b);
                 if (coopNodes.contains(b)) {
                     coopWireNodes.add(b);
@@ -114,20 +114,20 @@ public class SemiconductorMachine {
             }
             SemiconductorWire wire = new SemiconductorWire(allWireNodes, coopWireNodes);
             wires.add(wire);
-            for (Long b: slaves) {
+            for (Long b : slaves) {
                 nodes.put(b, wire);
             }
         });
 
         enableLongs.forEach((Long a, Set<Long> enables) -> {
             SemiconductorWire wire = nodes.get(masterLongs.get(a));
-            for (Long c: enables) {
+            for (Long c : enables) {
                 SemiconductorWire other = nodes.get(masterLongs.get(c));
                 wire.enable(other);
             }
         });
 
-        for (Long a: poweredNodes) {
+        for (Long a : poweredNodes) {
             SemiconductorWire wire = nodes.get(a);
             if (wire != null) {
                 wire.power(a, true);
@@ -139,7 +139,7 @@ public class SemiconductorMachine {
     }
 
     public void release(Set<Long> allNodes, Set<Long> coopNodes) {
-        for (SemiconductorWire wire: wires) {
+        for (SemiconductorWire wire : wires) {
             wire.exportAllNodes(allNodes);
             wire.exportCoopNodes(coopNodes);
         }
@@ -196,7 +196,7 @@ public class SemiconductorMachine {
         List<SemiconductorWire> lowWires = new ArrayList<SemiconductorWire>();
 
         while (times-- > 0) {
-            for (SemiconductorWire wire: activeWires) {
+            for (SemiconductorWire wire : activeWires) {
                 if (wire.goHigh()) {
                     highWires.add(wire);
                     if (wire.haveCoopNodes()) {
@@ -216,41 +216,41 @@ public class SemiconductorMachine {
             }
             activeWires.clear();
 
-            for (SemiconductorWire wire: highWires) {
+            for (SemiconductorWire wire : highWires) {
                 wire.highOut(activeWires);
             }
             highWires.clear();
 
-            for (SemiconductorWire wire: lowWires) {
+            for (SemiconductorWire wire : lowWires) {
                 wire.lowOut(activeWires);
             }
             lowWires.clear();
         }
 
-        for (SemiconductorWire wire: lowNotifyWires) {
+        for (SemiconductorWire wire : lowNotifyWires) {
             wire.exportCoopNodes(lowNodes);
         }
-        for (SemiconductorWire wire: highNotifyWires) {
+        for (SemiconductorWire wire : highNotifyWires) {
             wire.exportCoopNodes(highNodes);
         }
     }
 
     public void exportAllNodes(Set<Long> nodes) {
-        for (SemiconductorWire wire: wires) {
+        for (SemiconductorWire wire : wires) {
             wire.exportAllNodes(nodes);
         }
     }
 
     public void exportCoopNodes(Set<Long> nodes) {
-        for (SemiconductorWire wire: wires) {
-            wire.exportCoopNodes(nodes);   
+        for (SemiconductorWire wire : wires) {
+            wire.exportCoopNodes(nodes);
         }
     }
 
     public void writeObject(PrintWriter out) throws IOException {
         out.println(machineId);
         out.println(wires.size());
-        for (SemiconductorWire wire: wires) {
+        for (SemiconductorWire wire : wires) {
             wire.writeObject(out);
         }
     }
@@ -267,12 +267,12 @@ public class SemiconductorMachine {
             activeWires.add(wire);
             Set<Long> x = new HashSet<Long>();
             wire.exportAllNodes(x);
-            for (Long pos: x) {
+            for (Long pos : x) {
                 nodes.put(pos, wire);
             }
         }
-        for (SemiconductorWire wire: wires) {
-            for (Long pos: wire.enableOtherNodes) {
+        for (SemiconductorWire wire : wires) {
+            for (Long pos : wire.enableOtherNodes) {
                 wire.enableOthers.add(nodes.get(pos));
             }
             wire.enableOtherNodes.clear();

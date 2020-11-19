@@ -105,7 +105,7 @@ public class SemiconductorWire {
     }
 
     public void highOut(Set<SemiconductorWire> activeWires) {
-        for (SemiconductorWire other: enableOthers) {
+        for (SemiconductorWire other : enableOthers) {
             if (--other.currentIn == 0) {
                 activeWires.add(other);
             }
@@ -113,7 +113,7 @@ public class SemiconductorWire {
     }
 
     public void lowOut(Set<SemiconductorWire> activeWires) {
-        for (SemiconductorWire other: enableOthers) {
+        for (SemiconductorWire other : enableOthers) {
             if (other.currentIn++ == 0) {
                 activeWires.add(other);
             }
@@ -131,22 +131,22 @@ public class SemiconductorWire {
     public void writeObject(PrintWriter out) throws IOException {
         out.println(wireId);
         out.println(allNodes.size());
-        for (Long pos: allNodes) {
+        for (Long pos : allNodes) {
             out.println(pos);
         }
         out.println(coopNodes.size());
-        for (Long pos: coopNodes) {
+        for (Long pos : coopNodes) {
             out.println(pos);
         }
         out.println(enableOthers.size());
-        for (SemiconductorWire wire: enableOthers) {
-            for (Long node: wire.allNodes) {
+        for (SemiconductorWire wire : enableOthers) {
+            for (Long node : wire.allNodes) {
                 out.println(node);
                 break;
             }
         }
         out.println(poweredNodes.size());
-        for (Long pos: poweredNodes) {
+        for (Long pos : poweredNodes) {
             out.println(pos);
         }
         out.println(poweredCommands);

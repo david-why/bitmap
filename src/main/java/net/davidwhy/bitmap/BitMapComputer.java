@@ -6,9 +6,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class BitMapComputer {
 
-	public static int absX = 0;
-	public static int absY = 10;
-	public static int absZ = 0;
+    public static int absX = 0;
+    public static int absY = 10;
+    public static int absZ = 0;
     public static int dataPos = -1;
 
     private static int fetchData() {
