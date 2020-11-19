@@ -137,13 +137,13 @@ public class SemiconductorWire {
     }
 
     public void exportAllNodes(Set<Long> nodes) {
-        if (nodes) {
+        if (nodes != null) {
             nodes.addAll(allNodes);
         }
     }
 
     public void exportCoopNodes(Set<Long> nodes) {
-        if (nodes) {
+        if (nodes != null) {
             nodes.addAll(coopNodes);
         }
     }
