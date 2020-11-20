@@ -94,7 +94,7 @@ public class SemiconductorBlock extends Block {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
-            if (pos.getX() == 0 && pos.getZ() == 0) {
+            if (pos.getX() == 0 && pos.getY() == 0 && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.start_gen"), true);
                 BitMapComputer.startGen();
             } else {
@@ -159,9 +159,6 @@ public class SemiconductorBlock extends Block {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    if (x == 0 && y == 0 && z == 0) {
-                        continue;
-                    }
                     BlockPos u = pos.add(x, y, z);
                     Set<Long> allNodes = new HashSet<Long>();
                     Set<Long> coopNodes = new HashSet<Long>();
