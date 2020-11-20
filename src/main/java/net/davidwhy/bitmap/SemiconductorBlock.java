@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +29,7 @@ public class SemiconductorBlock extends Block {
     public static final IntProperty ON;
 
     public SemiconductorBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE)
+        super(AbstractBlock.Settings.copy(Blocks.STONE)
                 .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 3 ? 12 : 0)));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
@@ -64,7 +64,7 @@ public class SemiconductorBlock extends Block {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
-            float flySpeed = 0.25F; //player.abilities.getFlySpeed() * 2;
+            float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
             player.abilities.setFlySpeed(flySpeed);
             player.sendAbilitiesUpdate();
             player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
