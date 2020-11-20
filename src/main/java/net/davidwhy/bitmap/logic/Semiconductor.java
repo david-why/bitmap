@@ -117,7 +117,10 @@ public class Semiconductor {
         }
     }
 
+    private static final int version = 60;
+
     public static void writeObject(PrintWriter out) throws IOException {
+        out.println(version);
         out.println(speed);
         out.println(machines.size());
         for (SemiconductorMachine machine : machines) {
@@ -128,6 +131,10 @@ public class Semiconductor {
     public static void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
         nodes.clear();
         machines.clear();
+
+        if (Integer.parseInt(in.readLine()) != version) {
+            throw new IOException();
+        }
 
         speed = Integer.parseInt(in.readLine());
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
