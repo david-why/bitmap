@@ -11,5 +11,6 @@
     "message.bitmap.speed": "半导体速度已调整为%dHz。",
     "message.bitmap.parsed": "收集了%d个半导体方块。",
     "message.bitmap.create": "用%d个半导体方块制作了一台机器。",
-    "message.bitmap.fly_speed": "飞行速度已调整为%f."
+    "message.bitmap.offline_mode": "设置离线模式。",
+    "message.bitmap.fly_speed": "飞行速度已调整为%f。"
 }

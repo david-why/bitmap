@@ -11,5 +11,6 @@
     "message.bitmap.speed": "Semiconductor speed changed to %d Hz.",
     "message.bitmap.parsed": "Collecting semiconductor blocks, %d blocks found.",
     "message.bitmap.create": "Create a machine with %d semiconductor blocks.",
+    "message.bitmap.offline_mode": "Set offline mode.",
     "message.bitmap.fly_speed": "Fly speed changed to %f."
 }
