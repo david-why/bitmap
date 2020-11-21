@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
 import net.davidwhy.bitmap.logic.Semiconductor;
 
 public class BitMapTick implements ServerTickEvents.StartWorldTick {
@@ -18,7 +17,7 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
     private int tickCount = 0;
 
     public void onStartTick(ServerWorld world) {
-        if (world.getDimension() != DimensionType.getOverworldDimensionType()) {
+        if (!SemiconductorBlock.isOverWorld(world)) {
             return;
         }
 

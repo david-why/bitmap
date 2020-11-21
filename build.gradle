@@ -12,12 +12,12 @@ group = project.maven_group
 
 // Fabric Latest Versions : https://modmuss50.me/fabric.html
 dependencies {
-    minecraft "com.mojang:minecraft:1.16.1"
-    mappings "net.fabricmc:yarn:1.16.1+build.21:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.9.0+build.204"
+    minecraft "com.mojang:minecraft:1.16.4"
+    mappings "net.fabricmc:yarn:1.16.4+build.7:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.10.8"
             
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.15.1+build.380-1.16.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.26.0+1.16"
 }
 
 processResources {

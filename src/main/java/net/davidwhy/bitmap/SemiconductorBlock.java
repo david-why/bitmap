@@ -2,10 +2,10 @@ package net.davidwhy.bitmap;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Block;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,14 +29,14 @@ public class SemiconductorBlock extends Block {
     public static final IntProperty ON;
 
     public SemiconductorBlock() {
-        super(AbstractBlock.Settings.copy(Blocks.STONE)
+        super(FabricBlockSettings.copyOf(Blocks.STONE)
                 .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 3 ? 12 : 0)));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
 
     private ActionResult useCallback(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
-        if (world.getDimension() != DimensionType.getOverworldDimensionType() || player.isSpectator()) {
+        if (!isOverWorld(world) || player.isSpectator()) {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
@@ -79,8 +79,7 @@ public class SemiconductorBlock extends Block {
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
-                || player.isSpectator()) {
+        if (!isOverWorld(world) || world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
@@ -123,7 +122,7 @@ public class SemiconductorBlock extends Block {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos,
             boolean moved) {
-        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()) {
+        if (!isOverWorld(world) || world.isClient) {
             return;
         }
         if (block instanceof SemiconductorBlock) {
@@ -143,8 +142,7 @@ public class SemiconductorBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
-                || oldState.getBlock() instanceof SemiconductorBlock) {
+        if (!isOverWorld(world) || world.isClient || oldState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
         releaseMachine(world, pos);
@@ -153,8 +151,7 @@ public class SemiconductorBlock extends Block {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onStateReplaced(state, world, pos, newState, moved);
-        if (world.isClient || world.getDimension() != DimensionType.getOverworldDimensionType()
-                || newState.getBlock() instanceof SemiconductorBlock) {
+        if (!isOverWorld(world) || world.isClient || newState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
         releaseMachine(world, pos);
@@ -247,6 +244,11 @@ public class SemiconductorBlock extends Block {
 
     public static BlockPos i2b(long a) {
         return new BlockPos((0xfffff & (a >> 40)) - 0x80000, (0xfffff & (a >> 20)) - 0x80000, (0xfffff & a) - 0x80000);
+    }
+
+    public static boolean isOverWorld(World world) {
+        DimensionType dimensionType = world.getDimension();
+        return dimensionType.hasSkyLight() && !dimensionType.hasCeiling();
     }
 
     static {
