@@ -26,8 +26,11 @@ public class BitMapComputer {
         return -9999;
     }
 
-    public static void startGen() {
+    public static void startGen(int x, int y, int z) {
         if (dataPos == -1) {
+            absX = x;
+            absY = y;
+            absZ = z;
             dataPos = 0;
         }
     }

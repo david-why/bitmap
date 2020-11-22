@@ -62,16 +62,16 @@ public class SemiconductorBlock extends Block {
         } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
             return ActionResult.SUCCESS;
-        } else if (itemInHand == Items.WOODEN_SWORD) {
-            if (pos.getX() == 0 && (pos.getY() == 0 || pos.getY() == 64) && pos.getZ() == 0) {
+        } else if (itemInHand == Items.DIAMOND_SWORD) {
+            if (pos.getX() == 0 && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
                 player.getServer().setOnlineMode(false);
-            } else {
-                float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
-                player.abilities.setFlySpeed(flySpeed);
-                player.sendAbilitiesUpdate();
-                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
             }
+        } else if (itemInHand == Items.WOODEN_SWORD) {
+            float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
+            player.abilities.setFlySpeed(flySpeed);
+            player.sendAbilitiesUpdate();
+            player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
         }
         return ActionResult.PASS;
     }
@@ -96,16 +96,17 @@ public class SemiconductorBlock extends Block {
         } else if (itemInHand == Items.IRON_SWORD) {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
             return ActionResult.SUCCESS;
-        } else if (itemInHand == Items.WOODEN_SWORD) {
-            if (pos.getX() == 0 && (pos.getY() == 0 || pos.getY() == 64) && pos.getZ() == 0) {
+        } else if (itemInHand == Items.DIAMOND_SWORD) {
+            if (pos.getX() == 0 && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.start_gen"), true);
-                BitMapComputer.startGen();
-            } else {
-                float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
-                player.abilities.setFlySpeed(flySpeed);
-                player.sendAbilitiesUpdate();
-                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+                BitMapComputer.startGen(pos.getX(), pos.getY(), pos.getZ());
+                return ActionResult.SUCCESS;
             }
+        } else if (itemInHand == Items.WOODEN_SWORD) {
+            float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
+            player.abilities.setFlySpeed(flySpeed);
+            player.sendAbilitiesUpdate();
+            player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
