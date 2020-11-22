@@ -39,16 +39,15 @@ public class SemiconductorBlock extends Block {
         if (!isOverWorld(world) || player.isSpectator()) {
             return ActionResult.PASS;
         }
-        Item itemInHand = player.getStackInHand(hand).getItem();
         BlockPos pos = hit.getBlockPos();
         BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
-        if (!(block instanceof SemiconductorBlock) || player.isSpectator()) {
+        if (!(state.getBlock() instanceof SemiconductorBlock)) {
             return ActionResult.PASS;
         }
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
+        Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.GOLDEN_SWORD) {
             int on = (Integer) state.get(ON);
             checkMachine(player, world, pos);
@@ -64,7 +63,7 @@ public class SemiconductorBlock extends Block {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
-            if (pos.getX() == 0 && pos.getY() == 0 && pos.getZ() == 0) {
+            if (pos.getX() == 0 && (pos.getY() == 0 || pos.getY() == 64) && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
                 player.getServer().setOnlineMode(false);
             } else {
@@ -82,11 +81,11 @@ public class SemiconductorBlock extends Block {
         if (!isOverWorld(world) || world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
         }
-        Item itemInHand = player.getStackInHand(hand).getItem();
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof SemiconductorBlock)) {
             return ActionResult.PASS;
         }
+        Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.GOLDEN_SWORD) {
             checkMachine(player, world, pos);
             if ((Integer) state.get(ON) < 2) {
@@ -98,7 +97,7 @@ public class SemiconductorBlock extends Block {
             player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.WOODEN_SWORD) {
-            if (pos.getX() == 0 && pos.getY() == 0 && pos.getZ() == 0) {
+            if (pos.getX() == 0 && (pos.getY() == 0 || pos.getY() == 64) && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.start_gen"), true);
                 BitMapComputer.startGen();
             } else {
