@@ -14,14 +14,8 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
         ServerTickEvents.START_WORLD_TICK.register(this);
     }
 
-    private int tickCount = 0;
-
     public void onStartTick(ServerWorld world) {
         if (!SemiconductorBlock.isOverWorld(world)) {
-            return;
-        }
-
-        if (tickCount++ % 2 == 1) {
             return;
         }
 

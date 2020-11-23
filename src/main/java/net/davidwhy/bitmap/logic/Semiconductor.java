@@ -104,7 +104,7 @@ public class Semiconductor {
     }
 
     private static long absTick = 0;
-    private static int tickPerSecond = 10;
+    private static final int tickPerSecond = 20;
 
     public static void tick(Set<Long> lowNodes, Set<Long> highNodes) {
         absTick++;
