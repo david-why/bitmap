@@ -44,10 +44,16 @@ public class SemiconductorBlock extends Block {
         if (!(state.getBlock() instanceof SemiconductorBlock)) {
             return ActionResult.PASS;
         }
+        Item itemInHand = player.getStackInHand(hand).getItem();
         if (world.isClient) {
+            if (itemInHand == Items.WOODEN_SWORD) {
+                float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
+                player.abilities.setFlySpeed(flySpeed);
+                player.sendAbilitiesUpdate();
+                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+            }
             return ActionResult.SUCCESS;
         }
-        Item itemInHand = player.getStackInHand(hand).getItem();
         if (itemInHand == Items.GOLDEN_SWORD) {
             int on = (Integer) state.get(ON);
             checkMachine(player, world, pos);
@@ -67,18 +73,13 @@ public class SemiconductorBlock extends Block {
                 player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
                 player.getServer().setOnlineMode(false);
             }
-        } else if (itemInHand == Items.WOODEN_SWORD) {
-            float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
-            player.abilities.setFlySpeed(flySpeed);
-            player.sendAbilitiesUpdate();
-            player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
         }
         return ActionResult.PASS;
     }
 
     private ActionResult attackCallback(PlayerEntity player, World world, Hand hand, BlockPos pos,
             Direction direction) {
-        if (!isOverWorld(world) || world.isClient || player.isSpectator()) {
+        if (!isOverWorld(world) || player.isSpectator()) {
             return ActionResult.PASS;
         }
         BlockState state = world.getBlockState(pos);
@@ -86,6 +87,15 @@ public class SemiconductorBlock extends Block {
             return ActionResult.PASS;
         }
         Item itemInHand = player.getStackInHand(hand).getItem();
+        if (world.isClient) {
+            if (itemInHand == Items.WOODEN_SWORD) {
+                float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
+                player.abilities.setFlySpeed(flySpeed);
+                player.sendAbilitiesUpdate();
+                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+            }
+            return ActionResult.PASS;
+        }
         if (itemInHand == Items.GOLDEN_SWORD) {
             checkMachine(player, world, pos);
             if ((Integer) state.get(ON) < 2) {
@@ -102,12 +112,6 @@ public class SemiconductorBlock extends Block {
                 BitMapComputer.startGen(pos.getX(), pos.getY(), pos.getZ());
                 return ActionResult.SUCCESS;
             }
-        } else if (itemInHand == Items.WOODEN_SWORD) {
-            float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
-            player.abilities.setFlySpeed(flySpeed);
-            player.sendAbilitiesUpdate();
-            player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
-            return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
     }
