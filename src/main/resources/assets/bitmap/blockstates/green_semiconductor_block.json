@@ -8,6 +8,9 @@
         },
         "on=2": {
             "model": "bitmap:cond_green_2"
+        },
+        "on=3": {
+            "model": "bitmap:cond_green_3"
         }
     }
 }

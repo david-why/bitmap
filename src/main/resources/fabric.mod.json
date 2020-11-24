@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "bitmap",
-  "version": "1.0.0",
+  "version": "1.1.0",
 
   "name": "BitMap simulator",
   "description": "A mod that simulates BitMap.",
@@ -28,7 +28,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.14.4"
+    "minecraft": ">=1.14.4"
   },
   "suggests": {}
 }

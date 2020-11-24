@@ -1,13 +1,14 @@
 package net.davidwhy.bitmap.logic;
 
+import java.io.*;
 import java.util.Set;
 import java.util.HashSet;
 
 public class SemiconductorWire {
 
+    private SemiconductorMachine machine;
     private Set<Long> allNodes;
     private Set<Long> coopNodes;
-    private Set<SemiconductorWire> enableOthers;
     private Set<Long> poweredNodes;
     private int poweredCommands;
     private int currentIn;
@@ -16,10 +17,15 @@ public class SemiconductorWire {
     private static long staticId = 0;
     private long wireId;
 
-    public SemiconductorWire(Set<Long> allNodes, Set<Long> coopNodes) {
+    private Set<SemiconductorWire> enableOthers;
+    private Set<Long> enableOtherNodes;
+
+    public SemiconductorWire(SemiconductorMachine m, Set<Long> allNodes, Set<Long> coopNodes) {
+        machine = m;
         this.allNodes = allNodes;
         this.coopNodes = coopNodes;
         enableOthers = new HashSet<SemiconductorWire>();
+        enableOtherNodes = new HashSet<Long>();
         poweredNodes = new HashSet<Long>();
         poweredCommands = 0;
         currentIn = 0;
@@ -46,26 +52,30 @@ public class SemiconductorWire {
         poweredCommands--;
     }
 
-    public boolean power(Long pos, boolean powered) {
-        boolean wasHigh = isHigh();
+    public void power(long pos, boolean powered) {
         if (powered) {
-            poweredNodes.add(pos);
+            if (!poweredNodes.contains(pos)) {
+                poweredNodes.add(pos);
+                poweredCommands++;
+            }
         } else {
-            poweredNodes.remove(pos);
+            if (poweredNodes.contains(pos)) {
+                poweredNodes.remove(pos);
+                poweredCommands--;
+            }
         }
-        return wasHigh != isHigh();
     }
 
     public boolean isHigh() {
-        return currentIn > 0 || poweredNodes.size() > 0 || poweredCommands > 0;
+        return currentIn > 0 || poweredCommands > 0;
     }
 
-    public boolean setCoop(Long pos) {
+    public boolean setCoop(long pos) {
         coopNodes.add(pos);
         return isHigh();
     }
 
-    public void unsetCoop(Long pos) {
+    public void unsetCoop(long pos) {
         coopNodes.remove(pos);
     }
 
@@ -74,8 +84,17 @@ public class SemiconductorWire {
     }
 
     public void enable(SemiconductorWire wire) {
-        enableOthers.add(wire);
-        wire.currentIn++;
+        if (!enableOthers.contains(wire)) {
+            enableOthers.add(wire);
+            wire.currentIn++;
+        }
+    }
+
+    public void enableAgain() {
+        for (Long pos : enableOtherNodes) {
+            enableOthers.add(machine.getWire(pos));
+        }
+        enableOtherNodes.clear();
     }
 
     public boolean goHigh() {
@@ -95,26 +114,85 @@ public class SemiconductorWire {
     }
 
     public void highOut(Set<SemiconductorWire> activeWires) {
-        enableOthers.forEach((SemiconductorWire other) -> {
+        for (SemiconductorWire other : enableOthers) {
             if (--other.currentIn == 0) {
                 activeWires.add(other);
             }
-        });
+        }
     }
 
     public void lowOut(Set<SemiconductorWire> activeWires) {
-        enableOthers.forEach((SemiconductorWire other) -> {
+        for (SemiconductorWire other : enableOthers) {
             if (other.currentIn++ == 0) {
                 activeWires.add(other);
             }
-        });
+        }
+    }
+
+    public Long getNode() {
+        for (Long pos : allNodes) {
+            return pos;
+        }
+        return 0L;
     }
 
     public void exportAllNodes(Set<Long> nodes) {
-        nodes.addAll(allNodes);
+        if (nodes != null) {
+            nodes.addAll(allNodes);
+        }
     }
 
     public void exportCoopNodes(Set<Long> nodes) {
-        nodes.addAll(coopNodes);
+        if (nodes != null) {
+            nodes.addAll(coopNodes);
+        }
+    }
+
+    public void writeObject(PrintWriter out) throws IOException {
+        out.println(wireId);
+        out.println(allNodes.size());
+        for (Long pos : allNodes) {
+            out.println(pos);
+        }
+        out.println(coopNodes.size());
+        for (Long pos : coopNodes) {
+            out.println(pos);
+        }
+        out.println(enableOthers.size());
+        for (SemiconductorWire wire : enableOthers) {
+            for (Long node : wire.allNodes) {
+                out.println(node);
+                break;
+            }
+        }
+        out.println(poweredNodes.size());
+        for (Long pos : poweredNodes) {
+            out.println(pos);
+        }
+        out.println(poweredCommands);
+        out.println(currentIn);
+        out.println(wasHigh ? "High" : "Low");
+    }
+
+    public void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
+        wireId = Long.parseLong(in.readLine());
+        if (wireId >= staticId) {
+            staticId = wireId + 1;
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            allNodes.add(Long.parseLong(in.readLine()));
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            coopNodes.add(Long.parseLong(in.readLine()));
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            enableOtherNodes.add(Long.parseLong(in.readLine()));
+        }
+        for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
+            poweredNodes.add(Long.parseLong(in.readLine()));
+        }
+        poweredCommands = Integer.parseInt(in.readLine());
+        currentIn = Integer.parseInt(in.readLine());
+        wasHigh = in.readLine().equals("High");
     }
 }
