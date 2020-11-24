@@ -72,6 +72,7 @@ public class SemiconductorBlock extends Block {
             if (pos.getX() == 0 && pos.getZ() == 0) {
                 player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
                 player.getServer().setOnlineMode(false);
+                return ActionResult.SUCCESS;
             }
         }
         return ActionResult.PASS;
@@ -93,6 +94,7 @@ public class SemiconductorBlock extends Block {
                 player.abilities.setFlySpeed(flySpeed);
                 player.sendAbilitiesUpdate();
                 player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+                return ActionResult.SUCCESS;
             }
             return ActionResult.PASS;
         }
