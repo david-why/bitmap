@@ -5,6 +5,7 @@ import java.io.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.dimension.DimensionType;
 import net.davidwhy.bitmap.logic.*;
 
 public class BitMapSave {
@@ -14,7 +15,8 @@ public class BitMapSave {
     public BitMapSave(MinecraftServer server) {
         try {
             theServer = server;
-            BufferedReader reader = new BufferedReader(new FileReader(theServer.getFile("bitmap.save")));
+            File file = new File(theServer.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDir(), "bitmap.save");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             Semiconductor.readObject(reader);
             reader.close();
             logger.info("bitmap.save loaded.");
@@ -26,7 +28,8 @@ public class BitMapSave {
 
     public void save() {
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter(theServer.getFile("bitmap.save")));
+            File file = new File(theServer.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDir(), "bitmap.save");
+            PrintWriter writer = new PrintWriter(new FileWriter(file));
             Semiconductor.writeObject(writer);
             writer.close();
             logger.info("bitmap.save saved.");
