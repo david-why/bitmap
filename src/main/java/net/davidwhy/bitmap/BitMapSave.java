@@ -1,7 +1,6 @@
 package net.davidwhy.bitmap;
 
 import java.io.*;
-import java.nio.file.Path;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,13 +9,14 @@ import net.minecraft.util.WorldSavePath;
 import net.davidwhy.bitmap.logic.*;
 
 public class BitMapSave {
-    private final Path configFile;
     private static final Logger logger = LogManager.getLogger("BitMap");
+    private MinecraftServer theServer;
 
     public BitMapSave(MinecraftServer server) {
-        configFile = server.getSavePath(WorldSavePath.ROOT).resolve("bitmap.save");
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(configFile.toFile()));
+            theServer = server;
+            File file = theServer.getSavePath(WorldSavePath.ROOT).resolve("bitmap.save").toFile();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             Semiconductor.readObject(reader);
             reader.close();
             logger.info("bitmap.save loaded.");
@@ -28,7 +28,8 @@ public class BitMapSave {
 
     public void save() {
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter(configFile.toFile()));
+            File file = theServer.getSavePath(WorldSavePath.ROOT).resolve("bitmap.save").toFile();
+            PrintWriter writer = new PrintWriter(new FileWriter(file));
             Semiconductor.writeObject(writer);
             writer.close();
             logger.info("bitmap.save saved.");
