@@ -50,7 +50,7 @@ public class SemiconductorBlock extends Block {
                 float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
                 player.abilities.setFlySpeed(flySpeed);
                 player.sendAbilitiesUpdate();
-                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+                sendMessage(player, "message.bitmap.fly_speed", flySpeed);
             }
             return ActionResult.SUCCESS;
         }
@@ -66,11 +66,11 @@ public class SemiconductorBlock extends Block {
             world.setBlockState(pos, (BlockState) state.with(ON, on), 3);
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
-            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedUp()), true);
+            sendMessage(player, "message.bitmap.speed", Semiconductor.speedUp());
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.DIAMOND_SWORD) {
             if (pos.getX() == 0 && pos.getZ() == 0) {
-                player.sendMessage(new TranslatableText("message.bitmap.offline_mode"), true);
+                sendMessage(player, "message.bitmap.offline_mode");
                 player.getServer().setOnlineMode(false);
                 return ActionResult.SUCCESS;
             }
@@ -93,7 +93,7 @@ public class SemiconductorBlock extends Block {
                 float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
                 player.abilities.setFlySpeed(flySpeed);
                 player.sendAbilitiesUpdate();
-                player.sendMessage(new TranslatableText("message.bitmap.fly_speed", flySpeed), true);
+                sendMessage(player, "message.bitmap.fly_speed", flySpeed);
                 return ActionResult.SUCCESS;
             }
             return ActionResult.PASS;
@@ -106,11 +106,11 @@ public class SemiconductorBlock extends Block {
             Semiconductor.powerBlock(b2i(pos));
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.IRON_SWORD) {
-            player.sendMessage(new TranslatableText("message.bitmap.speed", Semiconductor.speedDown()), true);
+            sendMessage(player, "message.bitmap.speed", Semiconductor.speedDown());
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.DIAMOND_SWORD) {
             if (pos.getX() == 0 && pos.getZ() == 0) {
-                player.sendMessage(new TranslatableText("message.bitmap.start_gen"), true);
+                sendMessage(player, "message.bitmap.start_gen");
                 BitMapComputer.startGen(pos.getX(), pos.getY(), pos.getZ());
                 return ActionResult.SUCCESS;
             }
@@ -202,7 +202,7 @@ public class SemiconductorBlock extends Block {
                     if (!allNodes.contains(b2i(t))) {
                         allNodes.add(b2i(t));
                         if (allNodes.size() % 20000 == 0) {
-                            player.sendMessage(new TranslatableText("message.bitmap.parsed", allNodes.size()), true);
+                            sendMessage(player, "message.bitmap.parsed", allNodes.size());
                         }
                         if (tstate.get(ON) > 1) {
                             coopNodes.add(b2i(t));
@@ -240,7 +240,7 @@ public class SemiconductorBlock extends Block {
                     }
                 }
             }
-            player.sendMessage(new TranslatableText("message.bitmap.create", retc), true);
+            sendMessage(player, "message.bitmap.create", retc);
         }
     }
 
@@ -255,6 +255,10 @@ public class SemiconductorBlock extends Block {
     public static boolean isOverWorld(World world) {
         DimensionType dimensionType = world.getDimension();
         return dimensionType.hasSkyLight() && !dimensionType.hasCeiling();
+    }
+
+    public static void sendMessage(PlayerEntity player, String key, Object... args) {
+        player.sendMessage(new TranslatableText(key, args), true);
     }
 
     static {
