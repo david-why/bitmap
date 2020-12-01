@@ -52,18 +52,21 @@ public class SemiconductorWire {
         poweredCommands--;
     }
 
-    public void power(long pos, boolean powered) {
+    public boolean power(long pos, boolean powered) {
         if (powered) {
             if (!poweredNodes.contains(pos)) {
                 poweredNodes.add(pos);
                 poweredCommands++;
+                return true;
             }
         } else {
             if (poweredNodes.contains(pos)) {
                 poweredNodes.remove(pos);
                 poweredCommands--;
+                return true;
             }
         }
+        return false;
     }
 
     public boolean isHigh() {

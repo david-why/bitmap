@@ -166,8 +166,9 @@ public class SemiconductorMachine {
         if (wire == null) {
             return;
         }
-        wire.power(pos, powered);
-        activeWires.add(wire);
+        if (wire.power(pos, powered)) {
+            activeWires.add(wire);
+        }
     }
 
     public void power(long pos, long absTick) {
