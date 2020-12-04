@@ -134,12 +134,14 @@ public class SemiconductorBlock extends Block {
         if (block instanceof SemiconductorBlock) {
             return;
         }
-        int powerLevel = world.getReceivedRedstonePower(pos);
         if (Semiconductor.inMachine(b2i(pos))) {
-            Semiconductor.powerBlock(b2i(pos), powerLevel > 8);
-            if (powerLevel > 8 && (Integer) state.get(ON) == 2) {
+            boolean powered = world.getReceivedRedstonePower(pos) > 8;
+            Semiconductor.powerBlock(b2i(pos), powered);
+            /*
+            if (powered && (Integer) state.get(ON) == 2) {
                 world.setBlockState(pos, (BlockState) state.with(ON, 3), 3);
             }
+            */
         }
     }
 
