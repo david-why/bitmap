@@ -19,7 +19,7 @@ public class BitMapTick implements ServerTickEvents.StartWorldTick {
             return;
         }
 
-        BitMapComputer.genComputer(world);
+        BitMapMod.COMPUTER.genComputer(world);
 
         Set<Long> lowNodes = new HashSet<Long>();
         Set<Long> highNodes = new HashSet<Long>();

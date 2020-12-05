@@ -21,6 +21,8 @@ public class BitMapMod implements ModInitializer {
         public static final Block PINK_BLOCK = new SemiconductorBlock();
         public static final Block WHITE_BLOCK = new SemiconductorBlock();
         public static final BitMapTick TICK = new BitMapTick();
+        public static final BitMapComputer COMPUTER = new BitMapComputer();
+
         private BitMapSave saver;
 
         @Override

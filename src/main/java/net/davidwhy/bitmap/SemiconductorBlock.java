@@ -110,8 +110,9 @@ public class SemiconductorBlock extends Block {
             return ActionResult.SUCCESS;
         } else if (itemInHand == Items.DIAMOND_SWORD) {
             if (pos.getX() == 0 && pos.getZ() == 0) {
-                sendMessage(player, "message.bitmap.start_gen");
-                BitMapComputer.startGen(pos.getX(), pos.getY(), pos.getZ());
+                if (BitMapMod.COMPUTER.startGen(pos.getX(), pos.getY(), pos.getZ())) {
+                    sendMessage(player, "message.bitmap.start_gen");
+                }
                 return ActionResult.SUCCESS;
             }
         }
