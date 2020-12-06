@@ -14,7 +14,6 @@ import net.minecraft.util.registry.Registry;
 public class BitMapMod implements ModInitializer {
 
         public static final String MODID = "bitmap";
-        public static final Logger LOGGER = LogManager.getLogger(MODID);
         public static final Block BLACK_BLOCK = new SemiconductorBlock();
         public static final Block RED_BLOCK = new SemiconductorBlock();
         public static final Block YELLOW_BLOCK = new SemiconductorBlock();
@@ -23,8 +22,9 @@ public class BitMapMod implements ModInitializer {
         public static final Block BLUE_BLOCK = new SemiconductorBlock();
         public static final Block PINK_BLOCK = new SemiconductorBlock();
         public static final Block WHITE_BLOCK = new SemiconductorBlock();
-        public static final BitMapTick TICK = new BitMapTick();
-        public static final BitMapComputer COMPUTER = new BitMapComputer();
+        public static BitMapTick TICK;
+        public static Logger LOGGER;
+        public static BitMapComputer COMPUTER;
 
         @Override
         public void onInitialize() {
@@ -53,6 +53,10 @@ public class BitMapMod implements ModInitializer {
                                 new BlockItem(PINK_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
                 Registry.register(Registry.ITEM, new Identifier(MODID, "white_semiconductor_block"),
                                 new BlockItem(WHITE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
+
+                LOGGER = LogManager.getLogger(MODID);
+                TICK = new BitMapTick();
+                COMPUTER = new BitMapComputer();
 
                 ServerLifecycleEvents.SERVER_STARTED.register((server) -> BitMapSave.load(server));
                 ServerLifecycleEvents.SERVER_STOPPED.register((server) -> BitMapSave.save(server));

@@ -1,7 +1,7 @@
 package net.davidwhy.bitmap;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -20,8 +20,8 @@ public class BitMapComputer {
 
     public BitMapComputer() {
         try {
-            File file = new File(getClass().getResource("/data/bitmap/bmp_computer.png").getFile());
-            BufferedImage image = ImageIO.read(file);
+            InputStream input = getClass().getResourceAsStream("/data/bitmap/bmp_computer.png");
+            BufferedImage image = ImageIO.read(input);
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
                     int color = image.getRGB(x, y) & 0x00ffffff;
@@ -51,7 +51,7 @@ public class BitMapComputer {
                     }
                 }
             }
-            BitMapMod.LOGGER.info("bmp_computer.png loaded.");
+            BitMapMod.LOGGER.info("bmp_computer.png loaded, " + Integer.toString(data.size() / 3) + " dots.");
         } catch (Exception e) {
             BitMapMod.LOGGER.warn("bmp_computer.png load failed.");
             data.clear();
