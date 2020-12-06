@@ -51,7 +51,9 @@ public class BitMapComputer {
                     }
                 }
             }
+            BitMapMod.LOGGER.info("bmp_computer.png loaded.");
         } catch (Exception e) {
+            BitMapMod.LOGGER.warn("bmp_computer.png load failed.");
             data.clear();
         }
     }

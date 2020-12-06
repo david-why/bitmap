@@ -1,5 +1,7 @@
 package net.davidwhy.bitmap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.block.Block;
@@ -12,6 +14,7 @@ import net.minecraft.util.registry.Registry;
 public class BitMapMod implements ModInitializer {
 
         public static final String MODID = "bitmap";
+        public static final Logger LOGGER = LogManager.getLogger(MODID);
         public static final Block BLACK_BLOCK = new SemiconductorBlock();
         public static final Block RED_BLOCK = new SemiconductorBlock();
         public static final Block YELLOW_BLOCK = new SemiconductorBlock();
@@ -22,8 +25,6 @@ public class BitMapMod implements ModInitializer {
         public static final Block WHITE_BLOCK = new SemiconductorBlock();
         public static final BitMapTick TICK = new BitMapTick();
         public static final BitMapComputer COMPUTER = new BitMapComputer();
-
-        private BitMapSave saver;
 
         @Override
         public void onInitialize() {
@@ -53,8 +54,8 @@ public class BitMapMod implements ModInitializer {
                 Registry.register(Registry.ITEM, new Identifier(MODID, "white_semiconductor_block"),
                                 new BlockItem(WHITE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
 
-                ServerLifecycleEvents.SERVER_STARTED.register((server) -> saver = new BitMapSave(server));
-                ServerLifecycleEvents.SERVER_STOPPED.register((server) -> saver.save());
+                ServerLifecycleEvents.SERVER_STARTED.register((server) -> BitMapSave.load(server));
+                ServerLifecycleEvents.SERVER_STOPPED.register((server) -> BitMapSave.save(server));
         }
 
 }
