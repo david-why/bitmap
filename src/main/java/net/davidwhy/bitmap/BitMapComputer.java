@@ -1,7 +1,6 @@
 package net.davidwhy.bitmap;
 
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -20,8 +19,7 @@ public class BitMapComputer {
 
     public BitMapComputer() {
         try {
-            InputStream input = getClass().getResourceAsStream("/data/bitmap/bmp_computer.png");
-            BufferedImage image = ImageIO.read(input);
+            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/data/bitmap/bmp_computer.png"));
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
                     int color = image.getRGB(x, y) & 0x00ffffff;

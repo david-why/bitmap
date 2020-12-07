@@ -1,6 +1,8 @@
 package net.davidwhy.bitmap.logic;
 
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -14,18 +16,18 @@ public class SemiconductorWire {
     private int currentIn;
     private boolean wasHigh;
 
+    public long wireId;
     private static long staticId = 0;
-    private long wireId;
 
-    private Set<SemiconductorWire> enableOthers;
-    private Set<Long> enableOtherNodes;
+    private List<SemiconductorWire> enableOthers;
+    private Set<Long> enableOtherIds;
 
     public SemiconductorWire(SemiconductorMachine m, Set<Long> allNodes, Set<Long> coopNodes) {
         machine = m;
         this.allNodes = allNodes;
         this.coopNodes = coopNodes;
-        enableOthers = new HashSet<SemiconductorWire>();
-        enableOtherNodes = new HashSet<Long>();
+        enableOthers = new ArrayList<SemiconductorWire>();
+        enableOtherIds = new HashSet<Long>();
         poweredNodes = new HashSet<Long>();
         poweredCommands = 0;
         currentIn = 0;
@@ -87,17 +89,18 @@ public class SemiconductorWire {
     }
 
     public void enable(SemiconductorWire wire) {
-        if (!enableOthers.contains(wire)) {
+        if (!enableOtherIds.contains(wire.wireId)) {
+            enableOtherIds.add(wire.wireId);
             enableOthers.add(wire);
             wire.currentIn++;
         }
     }
 
     public void enableAgain() {
-        for (Long pos : enableOtherNodes) {
-            enableOthers.add(machine.getWire(pos));
+        enableOthers.clear();
+        for (Long id : enableOtherIds) {
+            enableOthers.add(machine.getWire(id));
         }
-        enableOtherNodes.clear();
     }
 
     public boolean goHigh() {
@@ -161,12 +164,9 @@ public class SemiconductorWire {
         for (Long pos : coopNodes) {
             out.println(pos);
         }
-        out.println(enableOthers.size());
-        for (SemiconductorWire wire : enableOthers) {
-            for (Long node : wire.allNodes) {
-                out.println(node);
-                break;
-            }
+        out.println(enableOtherIds.size());
+        for (Long id : enableOtherIds) {
+            out.println(id);
         }
         out.println(poweredNodes.size());
         for (Long pos : poweredNodes) {
@@ -189,7 +189,7 @@ public class SemiconductorWire {
             coopNodes.add(Long.parseLong(in.readLine()));
         }
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
-            enableOtherNodes.add(Long.parseLong(in.readLine()));
+            enableOtherIds.add(Long.parseLong(in.readLine()));
         }
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
             poweredNodes.add(Long.parseLong(in.readLine()));

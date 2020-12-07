@@ -117,7 +117,7 @@ public class Semiconductor {
         }
     }
 
-    private static final int version = 60;
+    private static final int version = 61;
 
     public static void writeObject(PrintWriter out) throws IOException {
         out.println(version);

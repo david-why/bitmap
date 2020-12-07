@@ -1,17 +1,17 @@
 package net.davidwhy.bitmap.logic;
 
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 
 public class SemiconductorMachine {
 
     private Map<Long, SemiconductorWire> nodes;
-    private Set<SemiconductorWire> wires;
+    private Map<Long, SemiconductorWire> wires;
     private Set<SemiconductorWire> activeWires;
     private List<Long> pendingTicks;
     private List<SemiconductorWire> pendingWires;
@@ -21,7 +21,7 @@ public class SemiconductorMachine {
 
     public SemiconductorMachine() {
         nodes = new HashMap<Long, SemiconductorWire>();
-        wires = new HashSet<SemiconductorWire>();
+        wires = new HashMap<Long, SemiconductorWire>();
         activeWires = new HashSet<SemiconductorWire>();
         pendingTicks = new ArrayList<Long>();
         pendingWires = new ArrayList<SemiconductorWire>();
@@ -113,7 +113,7 @@ public class SemiconductorMachine {
                 }
             }
             SemiconductorWire wire = new SemiconductorWire(this, allWireNodes, coopWireNodes);
-            wires.add(wire);
+            wires.put(wire.wireId, wire);
             for (Long b : slaves) {
                 nodes.put(b, wire);
             }
@@ -134,12 +134,12 @@ public class SemiconductorMachine {
             }
         }
 
-        activeWires.addAll(wires);
+        activeWires.addAll(wires.values());
         return allNodes.size();
     }
 
     public void release(Set<Long> allNodes, Set<Long> coopNodes) {
-        for (SemiconductorWire wire : wires) {
+        for (SemiconductorWire wire : wires.values()) {
             wire.exportAllNodes(allNodes);
             wire.exportCoopNodes(coopNodes);
         }
@@ -237,25 +237,25 @@ public class SemiconductorMachine {
     }
 
     public void exportAllNodes(Set<Long> nodes) {
-        for (SemiconductorWire wire : wires) {
+        for (SemiconductorWire wire : wires.values()) {
             wire.exportAllNodes(nodes);
         }
     }
 
     public void exportCoopNodes(Set<Long> nodes) {
-        for (SemiconductorWire wire : wires) {
+        for (SemiconductorWire wire : wires.values()) {
             wire.exportCoopNodes(nodes);
         }
     }
 
-    public SemiconductorWire getWire(Long pos) {
-        return nodes.get(pos);
+    public SemiconductorWire getWire(Long wireId) {
+        return wires.get(wireId);
     }
 
     public void writeObject(PrintWriter out) throws IOException {
         out.println(machineId);
         out.println(wires.size());
-        for (SemiconductorWire wire : wires) {
+        for (SemiconductorWire wire : wires.values()) {
             wire.writeObject(out);
         }
         out.println(pendingWires.size());
@@ -272,7 +272,7 @@ public class SemiconductorMachine {
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
             SemiconductorWire wire = new SemiconductorWire(this, new HashSet<Long>(), new HashSet<Long>());
             wire.readObject(in);
-            wires.add(wire);
+            wires.put(wire.wireId, wire);
             activeWires.add(wire);
             Set<Long> x = new HashSet<Long>();
             wire.exportAllNodes(x);
@@ -280,7 +280,7 @@ public class SemiconductorMachine {
                 nodes.put(pos, wire);
             }
         }
-        for (SemiconductorWire wire : wires) {
+        for (SemiconductorWire wire : wires.values()) {
             wire.enableAgain();
         }
         for (int i = Integer.parseInt(in.readLine()); i > 0; i--) {
