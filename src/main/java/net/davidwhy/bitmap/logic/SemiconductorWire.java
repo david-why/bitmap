@@ -16,7 +16,7 @@ public class SemiconductorWire {
     private int currentIn;
     private boolean wasHigh;
 
-    public long wireId;
+    private long wireId;
     private static long staticId = 0;
 
     private List<SemiconductorWire> enableOthers;
@@ -35,8 +35,12 @@ public class SemiconductorWire {
         wireId = staticId++;
     }
 
+    public long getWireId() {
+        return wireId;
+    }
+
     public int hashCode() {
-        return (int) wireId;
+        return (int)wireId;
     }
 
     public boolean equals(Object o) {
@@ -98,7 +102,7 @@ public class SemiconductorWire {
 
     public void enableAgain() {
         enableOthers.clear();
-        for (Long id : enableOtherIds) {
+        for (long id : enableOtherIds) {
             enableOthers.add(machine.getWire(id));
         }
     }
@@ -135,13 +139,6 @@ public class SemiconductorWire {
         }
     }
 
-    public Long getNode() {
-        for (Long pos : allNodes) {
-            return pos;
-        }
-        return 0L;
-    }
-
     public void exportAllNodes(Set<Long> nodes) {
         if (nodes != null) {
             nodes.addAll(allNodes);
@@ -157,19 +154,19 @@ public class SemiconductorWire {
     public void writeObject(PrintWriter out) throws IOException {
         out.println(wireId);
         out.println(allNodes.size());
-        for (Long pos : allNodes) {
+        for (long pos : allNodes) {
             out.println(pos);
         }
         out.println(coopNodes.size());
-        for (Long pos : coopNodes) {
+        for (long pos : coopNodes) {
             out.println(pos);
         }
         out.println(enableOtherIds.size());
-        for (Long id : enableOtherIds) {
+        for (long id : enableOtherIds) {
             out.println(id);
         }
         out.println(poweredNodes.size());
-        for (Long pos : poweredNodes) {
+        for (long pos : poweredNodes) {
             out.println(pos);
         }
         out.println(poweredCommands);

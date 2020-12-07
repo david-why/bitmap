@@ -176,7 +176,7 @@ public class SemiconductorBlock extends Block {
                     Set<Long> allNodes = new HashSet<Long>();
                     Set<Long> coopNodes = new HashSet<Long>();
                     if (Semiconductor.releaseMachine(b2i(u), allNodes, coopNodes) > 0) {
-                        for (Long a : allNodes) {
+                        for (long a : allNodes) {
                             BlockPos t = i2b(a);
                             BlockState state = world.getBlockState(t);
                             if (state.getBlock() instanceof SemiconductorBlock) {
@@ -236,7 +236,7 @@ public class SemiconductorBlock extends Block {
 
         int retc = Semiconductor.createMachine(allNodes, coopNodes, poweredNodes);
         if (retc > 0) {
-            for (Long a : allNodes) {
+            for (long a : allNodes) {
                 if (!coopNodes.contains(a)) {
                     BlockPos t = i2b(a);
                     BlockState state = world.getBlockState(t);
