@@ -174,7 +174,7 @@ public class SemiconductorWire {
         out.println(wasHigh ? "High" : "Low");
     }
 
-    public void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
+    public void readObject(BufferedReader in) throws IOException {
         wireId = Long.parseLong(in.readLine());
         if (wireId >= staticId) {
             staticId = wireId + 1;

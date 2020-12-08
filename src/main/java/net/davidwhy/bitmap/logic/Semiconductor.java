@@ -128,7 +128,7 @@ public class Semiconductor {
         }
     }
 
-    public static void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
+    public static void readObject(BufferedReader in) throws IOException {
         nodes.clear();
         machines.clear();
 

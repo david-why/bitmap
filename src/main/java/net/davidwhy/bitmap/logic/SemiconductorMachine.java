@@ -268,7 +268,7 @@ public class SemiconductorMachine {
         }
     }
 
-    public void readObject(BufferedReader in) throws IOException, ClassNotFoundException {
+    public void readObject(BufferedReader in) throws IOException {
         machineId = Long.parseLong(in.readLine());
         if (machineId >= staticId) {
             staticId = machineId + 1;
