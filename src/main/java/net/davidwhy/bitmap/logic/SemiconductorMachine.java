@@ -107,7 +107,7 @@ public class SemiconductorMachine {
             }
         }
 
-        slaveLongs.forEach((Long a, Set<Long> slaves) -> {
+        for (Set<Long> slaves : slaveLongs.values()) {
             Set<Long> allWireNodes = new HashSet<Long>();
             Set<Long> coopWireNodes = new HashSet<Long>();
             for (long b : slaves) {
@@ -121,15 +121,15 @@ public class SemiconductorMachine {
             for (long b : slaves) {
                 nodes.put(b, wire);
             }
-        });
+        }
 
-        enableLongs.forEach((Long a, Set<Long> enables) -> {
+        for (long a : enableLongs.keySet()) {
             SemiconductorWire wire = nodes.get(masterLongs.get(a));
-            for (long c : enables) {
+            for (long c : enableLongs.get(a)) {
                 SemiconductorWire other = nodes.get(masterLongs.get(c));
                 wire.enable(other);
             }
-        });
+        }
 
         for (long a : poweredNodes) {
             SemiconductorWire wire = nodes.get(a);

@@ -51,7 +51,7 @@ public class Semiconductor {
         return machine.create(allNodes, coopNodes, poweredNodes);
     }
 
-    public static int releaseMachine(Long pos, Set<Long> allNodes, Set<Long> coopNodes) {
+    public static int releaseMachine(long pos, Set<Long> allNodes, Set<Long> coopNodes) {
         SemiconductorMachine machine = nodes.get(pos);
         if (machine == null) {
             return 0;
