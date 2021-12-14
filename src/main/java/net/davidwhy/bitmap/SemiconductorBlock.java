@@ -30,7 +30,7 @@ public class SemiconductorBlock extends Block {
 
     public SemiconductorBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE)
-                .lightLevel((BlockState state) -> ((Integer) state.get(ON) == 3 ? 12 : 0)));
+                .luminance((BlockState state) -> ((Integer) state.get(ON) == 3 ? 12 : 0)));
         AttackBlockCallback.EVENT.register(this::attackCallback);
         UseBlockCallback.EVENT.register(this::useCallback);
     }
