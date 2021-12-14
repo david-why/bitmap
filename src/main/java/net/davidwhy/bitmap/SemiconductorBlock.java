@@ -48,7 +48,7 @@ public class SemiconductorBlock extends Block {
         if (world.isClient) {
             if (itemInHand == Items.WOODEN_SWORD) {
                 float flySpeed = 0.25F; // player.abilities.getFlySpeed() * 2;
-                player.abilities.setFlySpeed(flySpeed);
+                player.getAbilities().setFlySpeed(flySpeed);
                 player.sendAbilitiesUpdate();
                 sendMessage(player, "message.bitmap.fly_speed", flySpeed);
             }
@@ -91,7 +91,7 @@ public class SemiconductorBlock extends Block {
         if (world.isClient) {
             if (itemInHand == Items.WOODEN_SWORD) {
                 float flySpeed = 0.05F; // player.abilities.getFlySpeed() / 2;
-                player.abilities.setFlySpeed(flySpeed);
+                player.getAbilities().setFlySpeed(flySpeed);
                 player.sendAbilitiesUpdate();
                 sendMessage(player, "message.bitmap.fly_speed", flySpeed);
                 return ActionResult.SUCCESS;
@@ -152,7 +152,7 @@ public class SemiconductorBlock extends Block {
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
+        //super.onBlockAdded(state, world, pos, oldState, moved);
         if (!isOverWorld(world) || world.isClient || oldState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
@@ -161,7 +161,7 @@ public class SemiconductorBlock extends Block {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onStateReplaced(state, world, pos, newState, moved);
+        //super.onStateReplaced(state, world, pos, newState, moved);
         if (!isOverWorld(world) || world.isClient || newState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
