@@ -138,11 +138,6 @@ public class SemiconductorBlock extends Block {
         if (Semiconductor.inMachine(b2i(pos))) {
             boolean powered = world.getReceivedRedstonePower(pos) > 8;
             Semiconductor.powerBlock(b2i(pos), powered);
-            /*
-            if (powered && (Integer) state.get(ON) == 2) {
-                world.setBlockState(pos, (BlockState) state.with(ON, 3), 3);
-            }
-            */
         }
     }
 
@@ -152,7 +147,7 @@ public class SemiconductorBlock extends Block {
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        //super.onBlockAdded(state, world, pos, oldState, moved);
+        // super.onBlockAdded(state, world, pos, oldState, moved);
         if (!isOverWorld(world) || world.isClient || oldState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
@@ -161,7 +156,7 @@ public class SemiconductorBlock extends Block {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        //super.onStateReplaced(state, world, pos, newState, moved);
+        // super.onStateReplaced(state, world, pos, newState, moved);
         if (!isOverWorld(world) || world.isClient || newState.getBlock() instanceof SemiconductorBlock) {
             return;
         }
