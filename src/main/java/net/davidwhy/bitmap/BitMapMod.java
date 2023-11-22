@@ -7,9 +7,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class BitMapMod implements ModInitializer {
 
@@ -28,31 +28,31 @@ public class BitMapMod implements ModInitializer {
 
         @Override
         public void onInitialize() {
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "black_semiconductor_block"), BLACK_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "red_semiconductor_block"), RED_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "yellow_semiconductor_block"), YELLOW_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "green_semiconductor_block"), GREEN_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "cyan_semiconductor_block"), CYAN_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_semiconductor_block"), BLUE_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "pink_semiconductor_block"), PINK_BLOCK);
-                Registry.register(Registry.BLOCK, new Identifier(MODID, "white_semiconductor_block"), WHITE_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "black_semiconductor_block"), BLACK_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "red_semiconductor_block"), RED_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "yellow_semiconductor_block"), YELLOW_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "green_semiconductor_block"), GREEN_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "cyan_semiconductor_block"), CYAN_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "blue_semiconductor_block"), BLUE_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "pink_semiconductor_block"), PINK_BLOCK);
+                Registry.register(Registries.BLOCK, new Identifier(MODID, "white_semiconductor_block"), WHITE_BLOCK);
 
-                Registry.register(Registry.ITEM, new Identifier(MODID, "black_semiconductor_block"),
-                                new BlockItem(BLACK_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "red_semiconductor_block"),
-                                new BlockItem(RED_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_semiconductor_block"), new BlockItem(
-                                YELLOW_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "green_semiconductor_block"),
-                                new BlockItem(GREEN_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "cyan_semiconductor_block"),
-                                new BlockItem(CYAN_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "blue_semiconductor_block"),
-                                new BlockItem(BLUE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "pink_semiconductor_block"),
-                                new BlockItem(PINK_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
-                Registry.register(Registry.ITEM, new Identifier(MODID, "white_semiconductor_block"),
-                                new BlockItem(WHITE_BLOCK, new Item.Settings().group(ItemGroup.REDSTONE).maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "black_semiconductor_block"),
+                                new BlockItem(BLACK_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "red_semiconductor_block"),
+                                new BlockItem(RED_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "yellow_semiconductor_block"),
+                                new BlockItem(YELLOW_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "green_semiconductor_block"),
+                                new BlockItem(GREEN_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "cyan_semiconductor_block"),
+                                new BlockItem(CYAN_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "blue_semiconductor_block"),
+                                new BlockItem(BLUE_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "pink_semiconductor_block"),
+                                new BlockItem(PINK_BLOCK, new Item.Settings().maxCount(64)));
+                Registry.register(Registries.ITEM, new Identifier(MODID, "white_semiconductor_block"),
+                                new BlockItem(WHITE_BLOCK, new Item.Settings().maxCount(64)));
 
                 LOGGER = LogManager.getLogger(MODID);
                 TICK = new BitMapTick();

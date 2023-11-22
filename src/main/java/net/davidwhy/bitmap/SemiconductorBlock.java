@@ -13,7 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -249,7 +249,8 @@ public class SemiconductorBlock extends Block {
     }
 
     public static BlockPos i2b(long a) {
-        return new BlockPos((0xfffff & (a >> 40)) - 0x80000, (0xfffff & (a >> 20)) - 0x80000, (0xfffff & a) - 0x80000);
+        return new BlockPos((int) (0xfffff & (a >> 40)) - 0x80000, (int) (0xfffff & (a >> 20)) - 0x80000,
+                (int) (0xfffff & a) - 0x80000);
     }
 
     public static boolean isOverWorld(World world) {
@@ -258,7 +259,7 @@ public class SemiconductorBlock extends Block {
     }
 
     public static void sendMessage(PlayerEntity player, String key, Object... args) {
-        player.sendMessage(new TranslatableText(key, args), true);
+        player.sendMessage(Text.translatable(key, args), true);
     }
 
     static {
